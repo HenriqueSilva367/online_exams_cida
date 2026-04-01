@@ -6,5 +6,5 @@ bundle install
 bundle exec rails assets:precompile
 bundle exec rails assets:clean
 
-# Migra todos os bancos configurados no Rails 8 (primary, cache, queue, cable)
-bundle exec rails db:migrate
+# Prepara o banco (roda migrations e seeds)
+bundle exec rails db:prepare
