@@ -1,0 +1,32 @@
+<div class="dashboard-header">
+  <div>
+    <h1 class="page-title">Trilhas & Tópicos</h1>
+    <p class="page-subtitle">Gerencie os temas das provas e disciplinas</p>
+  </div>
+  
+</div>
+<div class="flex mb-6">
+  <%= link_to 'Novo Tópico', new_admin_topic_path, class: "btn-primary mb-10", style: "text-decoration: none; display: inline-block; margin-bottom: 25px;" %>
+</div>
+
+<div class="topics-grid">
+  <% @topics.each do |topic| %>
+    <div class="topic-card">
+      <div class="topic-card-body">
+        <h3 class="topic-title"><%= topic.title %></h3>
+        <p class="topic-desc"><%= truncate(topic.description, length: 120) %></p>
+      </div>
+      <div class="topic-card-footer">
+        <%= link_to 'Detalhes', admin_topic_path(topic), class: "btn-outline" %>
+        <%= link_to 'Editar', edit_admin_topic_path(topic), class: "btn-outline" %>
+        <%= button_to 'Excluir', admin_topic_path(topic), method: :delete, form: { data: { turbo_confirm: 'Tem certeza que deseja excluir?' } }, class: "btn-danger" %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @topics.empty? %>
+    <div class="empty-state">
+      <p>Nenhum tópico criado ainda.</p>
+    </div>
+  <% end %>
+</div>

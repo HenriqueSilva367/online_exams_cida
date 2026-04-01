@@ -1,0 +1,48 @@
+<div class="dashboard-header">
+  <div>
+    <h1 class="page-title">Alunos Avaliados</h1>
+    <p class="page-subtitle">Escolha um aluno para analisar detalhadamente o desempenho dele em todas as provas.</p>
+  </div>
+</div>
+
+<div class="topic-details-card" style="padding: 1rem; overflow-x: auto;">
+  <table style="width: 100%; border-collapse: collapse; text-align: left;">
+    <thead>
+      <tr style="border-bottom: 2px solid var(--border-color);">
+        <th style="padding: 1rem;">Estudante</th>
+        <th style="padding: 1rem;">Email / Contato</th>
+        <th style="padding: 1rem; text-align: center;">Total de Provas Realizadas</th>
+        <th style="padding: 1rem; text-align: right;">Auditoria Completa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users_with_exams.each do |st| %>
+        <tr style="border-bottom: 1px solid var(--border-color);">
+          <td style="padding: 1rem; font-weight: 600; font-size: 1.1rem;"><%= st.name || "Sem Nome" %></td>
+          
+          <td style="padding: 1rem; color: var(--text-muted);">
+            <%= st.email %>
+          </td>
+          
+          <td style="padding: 1rem; text-align: center;">
+             <span style="background-color: #f1f5f9; color: #475569; padding: 0.3rem 0.8rem; border-radius: 999px; font-weight: bold;">
+               <%= pluralize(st.exam_sessions.count, "Exame", "Exames") %>
+             </span>
+          </td>
+
+          <td style="padding: 1rem; text-align: right;">
+            <!-- Vamos direcionar o Admin para o 'show' do Último Exame que esse aluno fez. Lá a Sidebar carregará o resto! -->
+            <% ultimo_exame = st.exam_sessions.order(created_at: :desc).first %>
+            <%= link_to '📊 Ver Histórico do Aluno', admin_exam_session_path(ultimo_exame), class: "btn-primary", style: "padding: 0.5rem 1.2rem; font-size: 0.85rem; text-decoration: none;" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+  <% if @users_with_exams.empty? %>
+    <div class="empty-state" style="margin-top: 1rem; background: transparent; border: none; min-height: 150px;">
+      <p>Nenhum aluno realizou provas ainda. Quando fizerem, aparecerão agrupados aqui.</p>
+    </div>
+  <% end %>
+</div>

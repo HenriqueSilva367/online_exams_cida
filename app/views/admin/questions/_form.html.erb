@@ -1,0 +1,27 @@
+<% 
+  url_target = question.persisted? ? [:admin, question] : [:admin, exam, question] 
+%>
+
+<%= form_with(model: url_target, class: "auth-form") do |form| %>
+  <% if question.errors.any? %>
+    <div class="flash flash-alert">
+      <strong>Ops! <%= pluralize(question.errors.count, "erro") %>:</strong>
+      <ul style="margin: 0.5rem 0 0 1rem; font-size: 0.85rem;">
+        <% question.errors.full_messages.each do |error| %>
+          <li><%= error %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :title, "Enunciado da Pergunta", class: "form-label" %>
+    <div class="input-wrapper">
+      <%= form.text_area :title, class: "form-input", rows: 4, placeholder: "Ex: Qual é a capital do Brasil?" %>
+    </div>
+  </div>
+
+  <div class="form-actions" style="margin-top: 2rem;">
+    <%= form.submit "Salvar Pergunta", class: "btn-primary btn-block" %>
+  </div>
+<% end %>

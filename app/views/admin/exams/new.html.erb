@@ -1,0 +1,14 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card" style="max-width: 650px;">
+    <div class="auth-header">
+      <h2 class="auth-title">Configurar Nova Prova</h2>
+      <p class="auth-subtitle">Sua prova será alocada na trilha: <strong><%= @topic.title %></strong></p>
+    </div>
+
+    <%= render "form", exam: @exam, topic: @topic %>
+
+    <div class="auth-footer" style="margin-top: 1.5rem;">
+      <%= link_to '← Cancelar e Voltar', admin_topic_path(@topic) %>
+    </div>
+  </div>
+</div>

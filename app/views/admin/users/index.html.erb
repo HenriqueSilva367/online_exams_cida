@@ -1,0 +1,52 @@
+<div class="dashboard-header">
+  <div>
+    <h1 class="page-title">Gestão de Alunos (Usuários)</h1>
+    <p class="page-subtitle">Visualize ou altere os níveis de acesso de quem está cadastrado</p>
+  </div>
+</div>
+
+<div class="topic-details-card" style="padding: 1rem; overflow-x: auto;">
+  <table style="width: 100%; border-collapse: collapse; text-align: left;">
+    <thead>
+      <tr style="border-bottom: 2px solid var(--border-color);">
+        <th style="padding: 1rem;">ID</th>
+        <th style="padding: 1rem;">Nome</th>
+        <th style="padding: 1rem;">E-mail</th>
+        <th style="padding: 1rem;">Cargo</th>
+        <th style="padding: 1rem;">Membro Desde</th>
+        <th style="padding: 1rem; text-align: right;">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr style="border-bottom: 1px solid var(--border-color);">
+          <td style="padding: 1rem; color: var(--text-muted);"><%= user.id %></td>
+          <td style="padding: 1rem; font-weight: 600;"><%= user.name.presence || 'Sem nome cadastrado' %></td>
+          <td style="padding: 1rem; color: var(--text-muted);"><%= user.email %></td>
+          <td style="padding: 1rem;">
+            <% if user.admin? %>
+              <span style="background-color: #fef08a; color: #854d0e; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">Admin</span>
+            <% else %>
+              <span style="background-color: #bfdbfe; color: #1e40af; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">Estudante</span>
+            <% end %>
+          </td>
+          <td style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">
+             <%= user.created_at.strftime("%d/%m/%Y") %>
+          </td>
+          <td style="padding: 1rem; text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
+            <%= link_to 'Editar', edit_admin_user_path(user), class: "btn-outline" %>
+            <% unless user == current_user %>
+              <%= button_to 'Excluir', admin_user_path(user), method: :delete, form: { data: { turbo_confirm: 'Certeza que deseja deletar permanentemente este usuário?' } }, class: "btn-danger" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+  <% if @users.empty? %>
+    <div class="empty-state" style="margin-top: 1rem; background: transparent; border: none;">
+      <p>Nenhum usuário encontrado no sistema.</p>
+    </div>
+  <% end %>
+</div>

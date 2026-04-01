@@ -1,0 +1,14 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card" style="max-width: 600px;">
+    <div class="auth-header">
+      <h2 class="auth-title">Editar Usuário</h2>
+      <p class="auth-subtitle">Controle as informações e permissões da conta abaixo</p>
+    </div>
+
+    <%= render "form", user: @user %>
+
+    <div class="auth-footer" style="margin-top: 1.5rem;">
+      <%= link_to '← Voltar para Todos os Usuários', admin_users_path %>
+    </div>
+  </div>
+</div>

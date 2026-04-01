@@ -1,0 +1,14 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card" style="max-width: 650px;">
+    <div class="auth-header">
+      <h2 class="auth-title">Editar Propriedades da Prova</h2>
+      <p class="auth-subtitle">Trilha base: <strong><%= @exam.topic.title %></strong></p>
+    </div>
+
+    <%= render "form", exam: @exam, topic: @exam.topic %>
+
+    <div class="auth-footer" style="margin-top: 1.5rem;">
+      <%= link_to '← Cancelar', admin_topic_path(@exam.topic) %>
+    </div>
+  </div>
+</div>

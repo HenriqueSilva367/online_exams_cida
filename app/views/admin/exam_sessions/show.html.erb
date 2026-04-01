@@ -1,0 +1,132 @@
+<div class="dashboard-header" style="text-align: center; margin-bottom: 2rem;">
+  <div style="display: flex; justify-content: flex-start; margin-bottom: 1rem;">
+    <%= link_to '← Voltar à Lista de Alunos', admin_exam_sessions_path, class: "btn-outline", style: "text-decoration: none; padding: 0.4rem 1rem; font-size: 0.9rem;" %>
+  </div>
+  <h1 class="page-title">Histórico Escolar: <%= @user.name || @user.email.split('@').first %></h1>
+  <p class="page-subtitle">Auditando detalhes da Prova: <strong><%= @exam.title %></strong> da Trilha <%= @exam.topic.title %></p>
+</div>
+
+<div style="max-width: 1400px; margin: 0 auto; padding-bottom: 4rem;">
+
+  <!-- Painel de Desempenho Compacto (Apenas para o exame aberto atual) -->
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+    <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);"><%= @accuracy %>%</div>
+      <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Aproveitamento nesta prova</div>
+    </div>
+    <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <div style="font-size: 2.5rem; font-weight: 800; color: #10b981;"><%= @correct_answers %></div>
+      <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Questões Certas</div>
+    </div>
+    <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <div style="font-size: 2.5rem; font-weight: 800; color: #ef4444;"><%= @incorrect_answers %></div>
+      <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Erros ou Brancos</div>
+    </div>
+  </div>
+
+  <!-- Layout de Três Colunas (Mestre-Detalhe) -->
+  <div style="display: grid; grid-template-columns: 280px 300px 1fr; gap: 2rem; align-items: start;">
+    
+    <!-- Coluna 1: Lista de Todas as Evidências do Aluno (Menu Navegável) -->
+    <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; position: sticky; top: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-main);">Outras Provas Feitas</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem; max-height: 550px; overflow-y: auto;">
+          <% @all_sessions_for_user.each do |st_sess| %>
+             <% is_active = (st_sess.id == @exam_session.id) %>
+             <li>
+               <%= link_to admin_exam_session_path(st_sess), style: "display: block; padding: 0.8rem 1rem; border-radius: 0.6rem; border: 1px solid #{is_active ? 'var(--primary)' : 'transparent'}; background: #{is_active ? '#eef2ff' : '#f9fafb'}; color: #{is_active ? 'var(--primary)' : 'var(--text-main)'}; text-decoration: none; font-size: 0.95rem; font-weight: #{is_active ? 'bold' : 'normal'}; transition: all 0.2s ease;" do %>
+                 <span style="display: block; font-size: 0.75rem; color: #{is_active ? 'var(--primary)' : 'var(--text-muted)'}; margin-bottom: 0.3rem;"><%= st_sess.exam.topic.title %></span>
+                 <%= st_sess.exam.title %>
+                 
+                 <!-- Status visual da tentaviva -->
+                 <div style="margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                   <span style="font-size: 0.75rem; color: var(--text-muted);"><%= st_sess.created_at.strftime("%d/%m/%y") %></span>
+                   <% if st_sess.in_progress? %>
+                     <span style="font-size: 0.7rem; background: #fef08a; padding: 0.1rem 0.5rem; border-radius: 99px; font-weight: bold;">Rodando</span>
+                   <% elsif st_sess.completed? %>
+                     <span style="font-size: 0.8rem; color: #10b981; font-weight: bold;">Nota: <%= st_sess.score %></span>
+                   <% else %>
+                     <span style="font-size: 0.7rem; background: #fef2f2; color: #991b1b; padding: 0.1rem 0.5rem; border-radius: 99px;">Inválida</span>
+                   <% end %>
+                 </div>
+               <% end %>
+             </li>
+          <% end %>
+        </ul>
+    </div>
+
+    <!-- Coluna 2: O Gabarito Limpo (Índice de Acertos/Erros) -->
+    <div style="background: #fafafa; border: 1px dashed var(--border-color); border-radius: 1rem; padding: 1.5rem; position: sticky; top: 2rem;">
+      <h3 style="margin-top: 0; margin-bottom: 1rem; border-bottom: 2px dashed var(--border-color); padding-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-muted);">Espelho do Teste</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; max-height: 550px; overflow-y: auto;">
+        <% @questions.each_with_index do |q, index| %>
+          <% 
+            student_answer = @exam_session.session_answers.find { |sa| sa.question_id == q.id }&.answer
+            is_hit = student_answer&.is_correct
+            bg_color = is_hit ? '#dcfce7' : (student_answer.nil? ? '#fef08a' : '#fee2e2')
+            text_color = is_hit ? '#166534' : (student_answer.nil? ? '#854d0e' : '#991b1b')
+            icon = is_hit ? '✓ Acerto' : (student_answer.nil? ? '— Branco' : '✖ Erro')
+          %>
+          <li style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; background: <%= bg_color %>; color: <%= text_color %>; border-radius: 0.5rem; font-weight: 600; font-size: 0.9rem;">
+            <span>Questão <%= index + 1 %></span>
+            <span><%= icon %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <!-- Coluna 3: Detalhamento Compacto das Questões Feitas -->
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      <% @questions.each_with_index do |q, index| %>
+        <% 
+          student_answer = @exam_session.session_answers.find { |sa| sa.question_id == q.id }&.answer
+          is_hit = student_answer&.is_correct
+          border_style = is_hit ? '2px solid #34d399' : (student_answer.nil? ? '2px dashed #fbbf24' : '2px solid #fca5a5')
+        %>
+        
+        <div style="border: <%= border_style %>; background: #fff; border-radius: 0.8rem; padding: 1.2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+          <h4 style="margin: 0 0 1rem 0; font-size: 1.05rem; color: #374151; line-height: 1.4;">
+            <strong><%= index + 1 %>.</strong> <%= q.title %>
+          </h4>
+          
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem;">
+            <% q.answers.each do |ans| %>
+              <% 
+                 is_student_selection = (student_answer&.id == ans.id)
+                 is_actual_correct = ans.is_correct
+              %>
+              <li style="padding: 0.5rem 0.8rem; border-radius: 0.4rem; display: flex; align-items: center; gap: 0.8rem;
+                background: <%= is_actual_correct ? '#10b981' : (is_student_selection ? '#ef4444' : '#f9fafb') %>;
+                color: <%= (is_actual_correct || is_student_selection) ? '#ffffff' : '#4b5563' %>;
+                font-size: 0.9rem;
+              ">
+                <% if is_actual_correct %>
+                  <span style="font-weight: bold; font-size: 1.1rem; width: 20px; text-align: center;">✓</span>
+                <% elsif is_student_selection %>
+                  <span style="font-weight: bold; font-size: 1.1rem; width: 20px; text-align: center;">✖</span>
+                <% else %>
+                  <span style="display: inline-block; width: 20px;"></span>
+                <% end %>
+                <span style="<%= (is_actual_correct || is_student_selection) ? 'font-weight: 600;' : '' %>"><%= ans.title %></span>
+                
+                <% if is_student_selection && is_actual_correct %>
+                  <span style="margin-left: auto; font-size: 0.65rem; background: rgba(0,0,0,0.2); text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px;">Acertou</span>
+                <% elsif is_student_selection && !is_actual_correct %>
+                  <span style="margin-left: auto; font-size: 0.65rem; background: rgba(0,0,0,0.2); text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px;">Marcou</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      
+      <% if @questions.empty? %>
+        <div style="background: transparent; border: 1px dashed var(--border-color); padding: 2rem; border-radius: 1rem; text-align: center; color: var(--text-muted);">
+          O aluno iniciou esta prova quando ela estava sem questões cadastradas.
+        </div>
+      <% end %>
+
+    </div>
+
+  </div> <!-- Fim Grid 3 colunas -->
+</div>

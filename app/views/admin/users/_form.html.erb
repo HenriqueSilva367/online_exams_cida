@@ -1,0 +1,54 @@
+<%= form_with(model: [:admin, user], class: "auth-form") do |form| %>
+  <% if user.errors.any? %>
+    <div class="flash flash-alert">
+      <strong>Ops! <%= pluralize(user.errors.count, "erro") %> encontrado:</strong>
+      <ul style="margin: 0.5rem 0 0 1rem; font-size: 0.85rem;">
+        <% user.errors.full_messages.each do |error| %>
+          <li><%= error %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :name, "Nome Completo", class: "form-label" %>
+    <div class="input-wrapper">
+      <%= form.text_field :name, class: "form-input", placeholder: "Ex: Maria Silva" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :email, "Endereço de E-mail", class: "form-label" %>
+    <div class="input-wrapper">
+      <%= form.email_field :email, class: "form-input", placeholder: "maria@example.com" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :role, "Nível de Acesso (Cargo)", class: "form-label" %>
+    <div class="input-wrapper" style="position: relative;">
+      <%= form.select :role, User.roles.keys.map { |r| [r.humanize, r] }, {}, { class: "form-input", style: "appearance: none; cursor: pointer;" } %>
+      <div style="position: absolute; right: 1rem; top: 1rem; pointer-events: none; color: var(--text-muted);">▼</div>
+    </div>
+  </div>
+
+  <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 2.5rem 0 1.5rem 0;">
+
+  <div class="form-group">
+    <%= form.label :password, "Nova Senha (deixe em branco para manter a atual)", class: "form-label" %>
+    <div class="input-wrapper">
+      <%= form.password_field :password, class: "form-input", placeholder: "••••••••" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :password_confirmation, "Confirme Nova Senha", class: "form-label" %>
+    <div class="input-wrapper">
+      <%= form.password_field :password_confirmation, class: "form-input", placeholder: "••••••••" %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit "Salvar Usuário", class: "btn-primary btn-block" %>
+  </div>
+<% end %>

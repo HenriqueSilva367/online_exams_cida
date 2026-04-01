@@ -1,0 +1,14 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card" style="max-width: 650px;">
+    <div class="auth-header">
+      <h2 class="auth-title">Editar Pergunta</h2>
+      <p class="auth-subtitle">Modifique o Enunciado da sua Questão</p>
+    </div>
+
+    <%= render "form", question: @question, exam: @question.exam %>
+
+    <div class="auth-footer" style="margin-top: 1.5rem;">
+      <%= link_to '← Cancelar e Voltar à Prova', admin_exam_path(@question.exam) %>
+    </div>
+  </div>
+</div>

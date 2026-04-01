@@ -1,0 +1,68 @@
+<div class="dashboard-header">
+  <div>
+    <h1 class="page-title">Configurar Alternativas</h1>
+    <p class="page-subtitle">Prova: <%= @question.exam.title %></p>
+  </div>
+  <div class="header-actions">
+    <%= link_to '✏️ Editar Enunciado', edit_admin_question_path(@question), class: "btn-outline", style: "text-decoration: none;" %>
+    <%= link_to '← Voltar à Prova', admin_exam_path(@question.exam), class: "btn-outline" %>
+  </div>
+</div>
+
+<div class="topic-details-card" style="margin-bottom: 2rem;">
+  <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--text-main);">Enunciado da Pergunta</h3>
+  <div style="background: #fafafa; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 0.5rem; font-size: 1.1rem; line-height: 1.6;">
+    <%= @question.title %>
+  </div>
+</div>
+
+<div class="topics-grid" style="grid-template-columns: 1fr 1fr; align-items: start;">
+  <!-- Coluna da Tabela de Alternativas -->
+  <div class="topic-details-card" style="margin-bottom: 0;">
+    <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--text-main);">Opções de Resposta</h3>
+    
+    <% if @answers.any? %>
+      <ul style="list-style: none; padding-left: 0; margin: 0;">
+        <% @answers.each do |ans| %>
+          <li style="padding: 1rem; border: 1px solid var(--border-color); margin-bottom: 0.5rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: space-between; background: <%= ans.is_correct ? '#ecfdf5' : '#fff' %>; border-color: <%= ans.is_correct ? '#a7f3d0' : 'var(--border-color)' %>;">
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+              <% if ans.is_correct %>
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #10b981; color: white; border-radius: 50%; font-weight: bold; font-size: 0.8rem;">✓</span>
+              <% else %>
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #f3f4f6; color: #9ca3af; border-radius: 50%; font-weight: bold; font-size: 0.8rem;">-</span>
+              <% end %>
+              <span style="font-weight: 500;"><%= ans.title %></span>
+            </div>
+            
+            <%= button_to 'Excluir', admin_answer_path(ans), method: :delete, class: "btn-outline", style: "border: none; color: #ef4444; padding: 0.2rem 0.5rem; border-radius: 0.3rem;", form: { data: { turbo_confirm: "Gabarito: essa alternativa sumirá. Tem certeza?" } } %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="empty-state" style="padding: 2rem 1rem; background: transparent; border: 1px dashed var(--border-color);">
+        <p>Ainda não há alternativas. Os alunos não poderão responder essa questão!</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Coluna do Form de Inserir Nova Alternativa -->
+  <div class="topic-details-card" style="margin-bottom: 0; border: 2px dashed rgba(79, 70, 229, 0.3); background: rgba(79, 70, 229, 0.02);">
+    <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--primary);">+ Criar Nova Alternativa</h3>
+    
+    <%= form_with(model: [:admin, @question, @new_answer], class: "auth-form") do |form| %>
+      <div class="form-group">
+        <%= form.label :title, "Texto da Alternativa", class: "form-label" %>
+        <div class="input-wrapper">
+          <%= form.text_field :title, class: "form-input", placeholder: "Ex: 25 bananas", required: true %>
+        </div>
+      </div>
+
+      <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem; margin-bottom: 2rem;">
+        <%= form.check_box :is_correct, style: "width: 1.2rem; height: 1.2rem; cursor: pointer;" %>
+        <%= form.label :is_correct, "Marcar como a Resposta Correta (Gabarito)", class: "form-label", style: "margin: 0; cursor: pointer;" %>
+      </div>
+
+      <%= form.submit "Adicionar Alternativa", class: "btn-primary btn-block" %>
+    <% end %>
+  </div>
+</div>

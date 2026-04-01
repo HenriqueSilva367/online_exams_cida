@@ -1,0 +1,27 @@
+<div class="dashboard-header">
+  <div>
+    <h1 class="page-title">Provas Abertas</h1>
+    <p class="page-subtitle">Escolha uma disciplina para começar a praticar</p>
+  </div>
+</div>
+
+<div class="topics-grid">
+  <% @topics.each do |topic| %>
+    <div class="topic-card">
+      <div class="topic-card-body">
+        <h3 class="topic-title"><%= topic.title %></h3>
+        <p class="topic-desc"><%= truncate(topic.description, length: 120) %></p>
+      </div>
+      <div class="topic-card-footer" style="justify-content: space-between;">
+        <span style="color: var(--text-muted); font-size: 0.85rem;"><%= pluralize(topic.exams.count, "Prova disponível", "Provas disponíveis") %></span>
+        <%= link_to 'Acessar Trilha', topic_path(topic), class: "btn-primary", style: "padding: 0.4rem 1rem; font-size: 0.85rem; text-decoration: none;" %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @topics.empty? %>
+    <div class="empty-state">
+      <p>Nenhuma disciplina disponível no momento.</p>
+    </div>
+  <% end %>
+</div>

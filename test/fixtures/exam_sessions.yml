@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  exam: one
+  status: 1
+  score: 1
+  started_at: 2026-03-31 11:58:12
+  finished_at: 2026-03-31 11:58:12
+
+two:
+  user: two
+  exam: two
+  status: 1
+  score: 1
+  started_at: 2026-03-31 11:58:12
+  finished_at: 2026-03-31 11:58:12

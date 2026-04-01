@@ -1,0 +1,29 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <%= link_to authenticated_root_path, class: "brand-logo" do %>
+        <span class="icon">🎓</span> Online Exams
+      <% end %>
+    </div>
+    
+    <div class="navbar-links">
+      <% if current_user.admin? %>
+        <%= link_to "Dashboard", admin_root_path, class: "nav-link" %>
+        <%= link_to "Trilhas & Tópicos", admin_topics_path, class: "nav-link" %>
+        <%= link_to "Alunos", admin_users_path, class: "nav-link" %>
+        <%= link_to "Boletins", admin_exam_sessions_path, class: "nav-link" %>
+      <% else %>
+        <%= link_to "Provas Abertas", topics_path, class: "nav-link" %>
+        <%= link_to "Meus Resultados", exam_sessions_path, class: "nav-link" %>
+      <% end %>
+    </div>
+    
+    <div class="navbar-user">
+      <span class="user-greeting">Olá, <%= current_user.name&.split&.first || current_user.email.split('@').first %> (<%= current_user.admin? ? 'Admin' : 'Estudante' %>)</span>
+      
+      <%= button_to destroy_user_session_path, method: :delete, class: "btn-logout" do %>
+        Sair
+      <% end %>
+    </div>
+  </div>
+</nav>

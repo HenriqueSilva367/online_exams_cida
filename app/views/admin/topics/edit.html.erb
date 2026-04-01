@@ -1,0 +1,15 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card" style="max-width: 600px;">
+    <div class="auth-header">
+      <h2 class="auth-title">Editar Tópico</h2>
+      <p class="auth-subtitle">Atualize os dados da disciplina</p>
+    </div>
+
+    <%= render "form", topic: @topic %>
+
+    <div class="auth-footer" style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-direction: row;">
+      <%= link_to 'Ver Detalhes', admin_topic_path(@topic) %> |
+      <%= link_to 'Todos os Tópicos', admin_topics_path %>
+    </div>
+  </div>
+</div>

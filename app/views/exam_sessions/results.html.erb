@@ -1,0 +1,86 @@
+<div class="dashboard-header" style="text-align: center; margin-bottom: 3rem;">
+  <h1 class="page-title">Boletim Final de Resultados</h1>
+  <p class="page-subtitle">Prova: <strong><%= @exam.title %></strong> da Trilha <%= @exam.topic.title %></p>
+</div>
+
+<div style="max-width: 900px; margin: 0 auto; padding-bottom: 4rem;">
+
+  <!-- Painel de Desempenho / Resumo Numérico -->
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 4rem;">
+    <div style="background: var(--card-bg); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <div style="font-size: 3.5rem; font-weight: 800; color: var(--primary);"><%= @accuracy %>%</div>
+      <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; font-weight: 600;">Sua Nota/Precisão</div>
+    </div>
+    <div style="background: var(--card-bg); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <div style="font-size: 3.5rem; font-weight: 800; color: #10b981;"><%= @correct_answers %></div>
+      <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; font-weight: 600;">Acertos 🎉</div>
+    </div>
+    <div style="background: var(--card-bg); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <div style="font-size: 3.5rem; font-weight: 800; color: #ef4444;"><%= @incorrect_answers %></div>
+      <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; font-weight: 600;">Erros / Brancos ✖️</div>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom: 2rem; text-align: center; color: var(--text-main); font-size: 1.8rem; border-bottom: 2px dashed var(--border-color); padding-bottom: 1rem;">Gabarito Detalhado</h3>
+
+  <!-- Gabarito Visual Card by Card -->
+  <div style="display: flex; flex-direction: column; gap: 2rem;">
+    <% @questions.each_with_index do |q, index| %>
+      <% 
+        # Encontra a resposta dada pelo aluno nesta sessão
+        student_answer = @exam_session.session_answers.find { |sa| sa.question_id == q.id }&.answer
+        is_hit = student_answer&.is_correct
+        card_border = is_hit ? '#34d399' : '#fca5a5'
+        card_bg = is_hit ? '#f0fdf4' : '#fef2f2'
+        
+        # Se student_answer nil (nem marcou), considera Erro, mas avisa "Em Branco"
+      %>
+      
+      <div style="border: 2px solid <%= card_border %>; background: <%= card_bg %>; border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);">
+        <h4 style="margin: 0 0 1.5rem 0; font-size: 1.15rem; color: #1f2937; line-height: 1.5;">
+          <strong><%= index + 1 %>.</strong> <%= q.title %>
+          <% if student_answer.nil? %>
+             <span style="background: #fef08a; color: #854d0e; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: bold; margin-left: 1rem;">Deixada em Branco</span>
+          <% end %>
+        </h4>
+        
+        <ul style="list-style: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem;">
+          <% q.answers.each do |ans| %>
+            <% 
+               is_student_selection = (student_answer&.id == ans.id)
+               is_actual_correct = ans.is_correct
+            %>
+            <li style="padding: 1rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 1rem;
+              background: <%= is_actual_correct ? '#10b981' : (is_student_selection ? '#ef4444' : '#ffffff') %>;
+              color: <%= (is_actual_correct || is_student_selection) ? '#ffffff' : '#374151' %>;
+              border: 1px solid <%= (is_actual_correct || is_student_selection) ? 'transparent' : 'var(--border-color)' %>; 
+              font-size: 1.05rem;
+            ">
+              <% if is_actual_correct %>
+                <span style="font-weight: bold; font-size: 1.4rem;">✓</span>
+              <% elsif is_student_selection %>
+                <span style="font-weight: bold; font-size: 1.4rem;">✖</span>
+              <% else %>
+                <span style="display: inline-block; width: 1.4rem;"></span>
+              <% end %>
+              <span style="<%= (is_actual_correct || is_student_selection) ? 'font-weight: 600;' : '' %>"><%= ans.title %></span>
+              
+              <!-- Badges laterais informativas -->
+              <% if is_student_selection && is_actual_correct %>
+                <span style="margin-left: auto; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.25); color: white; padding: 0.4rem 0.8rem; border-radius: 999px;">Sua Resposta Correta</span>
+              <% elsif is_student_selection && !is_actual_correct %>
+                <span style="margin-left: auto; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.25); color: white; padding: 0.4rem 0.8rem; border-radius: 999px;">Onde você Errou</span>
+              <% elsif is_actual_correct && !is_student_selection %>
+                <span style="margin-left: auto; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.15); color: white; padding: 0.4rem 0.8rem; border-radius: 999px;">Gabarito Correto da Banca</span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+
+  <div style="text-align: center; margin-top: 4rem;">
+    <%= link_to '← Voltar para Minhas Provas', exam_sessions_path, class: "btn-primary", style: "padding: 0.8rem 2.5rem; font-size: 1.1rem; border-radius: 999px; text-decoration: none;" %>
+  </div>
+</div>

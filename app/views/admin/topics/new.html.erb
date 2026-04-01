@@ -1,0 +1,14 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card" style="max-width: 600px;">
+    <div class="auth-header">
+      <h2 class="auth-title">Novo Tópico</h2>
+      <p class="auth-subtitle">Crie uma nova disciplina ou trilha de estudo</p>
+    </div>
+
+    <%= render "form", topic: @topic %>
+
+    <div class="auth-footer" style="margin-top: 1.5rem;">
+      <%= link_to '← Voltar para Todos os Tópicos', admin_topics_path %>
+    </div>
+  </div>
+</div>

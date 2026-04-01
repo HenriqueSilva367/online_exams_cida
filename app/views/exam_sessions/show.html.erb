@@ -1,0 +1,124 @@
+<style>
+  .option-label:hover {
+    background-color: #f8fafc;
+    border-color: var(--primary);
+  }
+</style>
+
+<div class="dashboard-header" style="position: sticky; top: 0px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); z-index: 100; border-bottom: 2px solid var(--border-color); padding-top: 2rem; margin-top: -2rem;">
+  <div>
+    <h1 class="page-title"><%= @exam.title %></h1>
+    <p class="page-subtitle">Sua prova iniciou às <%= @exam_session.started_at.strftime("%H:%M") %></p>
+  </div>
+  <div class="header-actions">
+    <div style="background: #fef2f2; color: #991b1b; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: bold; border: 2px solid #fecaca; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
+      ⏱ Tempo Restante: <span id="time-remaining">00:00</span>
+    </div>
+  </div>
+</div>
+
+<div style="max-width: 800px; margin: 3rem auto;">
+  <%= form_with(model: @exam_session, id: "exam-form", class: "exam-form-container") do |form| %>
+    
+    <% @questions.each_with_index do |q, index| %>
+      <div class="topic-details-card" style="margin-bottom: 2.5rem; padding: 2.5rem; border-top: 4px solid var(--primary); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
+        <h3 style="margin-top: 0; margin-bottom: 1.5rem; font-size: 1.25rem; line-height: 1.6;">
+          <strong style="color: var(--primary); margin-right: 0.5rem;">Questão <%= index + 1 %>:</strong> <%= q.title %>
+        </h3>
+
+        <div class="options-group" style="display: flex; flex-direction: column; gap: 1rem;">
+          <% q.answers.each do |ans| %>
+            <label class="option-label" style="display: flex; align-items: center; padding: 1.2rem; border: 2px solid var(--border-color); border-radius: 0.5rem; cursor: pointer; transition: all 0.2s ease;">
+              <input type="radio" 
+                     name="exam_session[responses][<%= q.id %>]" 
+                     value="<%= ans.id %>"
+                     required
+                     style="margin-right: 1.2rem; transform: scale(1.4); accent-color: var(--primary);">
+              <span style="font-size: 1.05rem;"><%= ans.title %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @questions.empty? %>
+      <div class="empty-state" style="padding: 2rem 1rem; background: transparent; border: 1px dashed var(--border-color);">
+        <p>A prova não possui perguntas cadastradas. Por favor contate o administrador!</p>
+      </div>
+    <% end %>
+
+    <div style="text-align: right; padding: 2rem 0; border-top: 1px dashed var(--border-color);">
+      <button type="button" onclick="document.getElementById('modal-submit-exam').showModal()" class="btn-primary" style="font-size: 1.1rem; padding: 1rem 2.5rem; border-radius: 999px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4); border: none; cursor: pointer;">
+        Finalizar e Entregar Prova
+      </button>
+
+      <!-- Modal de Confirmação de Entrega -->
+      <dialog id="modal-submit-exam" class="exam-modal">
+        <div class="modal-content" style="text-align: left;">
+          <h3 style="margin-top: 0; color: var(--text-main);">Confirmação de Entrega</h3>
+          <p style="color: var(--text-muted); line-height: 1.5;">Você está prestes a finalizar sua tentativa e entregar as respostas ao professor.</p>
+          <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; background: #fffbeb; border: 1px solid #fde68a; padding: 0.8rem; border-radius: 0.5rem; color: #92400e;">
+            Atenção: Após confirmar a entrega, <strong>não será mais possível alterar</strong> nenhuma de suas respostas, mesmo que ainda reste tempo no relógio.
+          </p>
+          
+          <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end;">
+            <button type="button" onclick="document.getElementById('modal-submit-exam').close()" class="btn-outline" style="border: none; cursor: pointer;">Voltar para Revisão</button>
+            <button type="submit" name="commit" value="Submit Exam" class="btn-primary" style="border: none; cursor: pointer; background: #10b981;">
+              Sim, Entregar Prova!
+            </button>
+          </div>
+        </div>
+      </dialog>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  (function() {
+    const endTimeRaw = "<%= (@exam_session.started_at + @exam.time_duration.minutes).iso8601 %>";
+    const endTime = new Date(endTimeRaw).getTime();
+    const display = document.getElementById('time-remaining');
+    const form = document.getElementById('exam-form');
+    
+    let timerInterval = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = endTime - now;
+      
+      if (distance <= 0) {
+        clearInterval(timerInterval);
+        if (display) {
+          display.innerHTML = "00:00⏳";
+          display.style.color = "red";
+        }
+        
+        // Força envio automático da prova (Evita fraude de tempo)
+        if (form) {
+          console.log("Tempo esgotado! Submetendo prova automaticamente...");
+          const hiddenCommit = document.createElement("input");
+          hiddenCommit.type = "hidden";
+          hiddenCommit.name = "commit";
+          hiddenCommit.value = "Submit Exam";
+          form.appendChild(hiddenCommit);
+          
+          form.submit();
+        }
+      } else {
+        const minutes = Math.floor(distance / (1000 * 60)); // Total de minutos restantes
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000); // Segundos restantes
+        
+        if (display) {
+          display.innerHTML = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+          
+          if (minutes < 5) { // Alerta visual quando faltar menos de 5 min
+            display.parentElement.style.animation = "pulse 2s infinite";
+          }
+        }
+      }
+    }, 1000);
+    
+    // Cleanup if leaving via Turbolinks
+    document.addEventListener("turbo:before-cache", function() {
+      clearInterval(timerInterval);
+    }, { once: true });
+  })();
+</script>
