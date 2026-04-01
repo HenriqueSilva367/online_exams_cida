@@ -82,18 +82,16 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
-  # Usar o mesmo banco para tudo no Rails 8 de forma simplificada
-  cache:
+  primary: &primary_production
     <<: *default
     url: <%= ENV["DATABASE_URL"] %>
+  # Reutiliza a mesma configuração para cache, queue e cable no Render
+  cache:
+    <<: *primary_production
     migrations_paths: db/cache_migrate
   queue:
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
+    <<: *primary_production
     migrations_paths: db/queue_migrate
   cable:
-    <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
+    <<: *primary_production
     migrations_paths: db/cable_migrate
