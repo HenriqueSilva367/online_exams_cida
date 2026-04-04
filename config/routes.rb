@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "home/index"
   get "exam_sessions/index"
   get "exam_sessions/show"
   get "exams/index"
@@ -13,7 +14,7 @@ Rails.application.routes.draw do
       root 'topics#index', as: :authenticated_root
     end
     unauthenticated do
-      root 'devise/sessions#new', as: :unauthenticated_root
+      root 'home#index', as: :unauthenticated_root
     end
   end
 

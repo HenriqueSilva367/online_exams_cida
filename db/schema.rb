@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_31_145815) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_03_002733) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,6 +60,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_31_145815) do
     t.datetime "finished_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "result_status", default: 0
+    t.jsonb "detailed_results"
     t.index ["exam_id"], name: "index_exam_sessions_on_exam_id"
     t.index ["user_id"], name: "index_exam_sessions_on_user_id"
   end
@@ -72,6 +74,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_31_145815) do
     t.integer "time_duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "exam_type", default: 0
     t.index ["topic_id"], name: "index_exams_on_topic_id"
   end
 
@@ -80,7 +83,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_31_145815) do
     t.text "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "topic_id"
     t.index ["exam_id"], name: "index_questions_on_exam_id"
+    t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
 
   create_table "session_answers", force: :cascade do |t|
@@ -122,6 +127,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_31_145815) do
   add_foreign_key "exam_sessions", "users"
   add_foreign_key "exams", "topics"
   add_foreign_key "questions", "exams"
+  add_foreign_key "questions", "topics"
   add_foreign_key "session_answers", "answers"
   add_foreign_key "session_answers", "exam_sessions"
   add_foreign_key "session_answers", "questions"

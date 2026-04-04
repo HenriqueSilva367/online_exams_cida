@@ -1,0 +1,131 @@
+<div class="landing-wrapper">
+  <!-- Navbar de Vendas -->
+  <nav class="navbar-sales">
+    <div class="logo" style="display: flex; flex-direction: column; align-items: center; line-height: 1.2;">
+      <img src="/logoCida.jpg" alt="Logo CIDA" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--navy-midnight); margin-bottom: 5px;">
+      <span style="font-weight: 700; font-size: 0.65rem; color: var(--navy-midnight); text-transform: uppercase; letter-spacing: 0.5px;">Centro de Instrução e Desenvolvimento Aéreo</span>
+    </div>
+    <div class="nav-links-sales">
+      <a href="#" class="nav-link-sales">Quem Somos</a>
+      <a href="#" class="nav-link-sales">Agende uma Visita</a>
+      <a href="#cursos" class="nav-link-sales">Cursos</a>
+      <%= link_to "Área do Aluno", new_user_session_path, class: "btn-area-aluno" %>
+    </div>
+  </nav>
+
+  <!-- Hero Section (Venda / Alinhamento Esquerda) -->
+  <header class="hero-sales-section">
+    <div class="hero-content" style="max-width: 700px; text-align: left; margin: 0;">
+      <h1 class="hero-title" style="text-align: left; margin-bottom: 1.5rem;">
+        Sua Carreira na Aviação <br><span class="text-gold" style="font-size: 4.5rem;">Começa Aqui!</span>
+      </h1>
+      <p style="font-size: 1.4rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 3rem; line-height: 1.6; font-weight: 400; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+        Formamos os melhores profissionais do céu. <br>Escolha o seu curso e garanta seu futuro no mercado que mais cresce.
+      </p>
+      <div style="display: flex; gap: 1.5rem;">
+        <a href="#cursos" class="btn-hero-primary" style="border-radius: 8px;">Conhecer Cursos</a>
+        <a href="#" class="btn-hero-secondary" style="border-radius: 8px;">Falar com Consultor</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stage 2: Carousel de Cursos -->
+  <section class="carousel-sales">
+    <div class="carousel-inner" id="carousel-inner">
+      <div class="slide-sales slide-1">
+        <h2 class="carousel-title">Comissário de Voo</h2>
+        <p class="carousel-subtitle">ESTEJA PRONTO PARA DECOLAR</p>
+      </div>
+      <div class="slide-sales slide-2">
+        <h2 class="carousel-title">Agente Aeroportuário</h2>
+        <p class="carousel-subtitle">A BASE DE TODA A OPERAÇÃO</p>
+      </div>
+      <div class="slide-sales slide-3">
+        <h2 class="carousel-title">Piloto Privado</h2>
+        <p class="carousel-subtitle">O PRIMEIRO PASSO DO COMANDANTE</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stage 3: Cursos Disponíveis (Estilo Lito Academy) -->
+  <section id="cursos" class="subjects-section" style="background: white; padding-top: 8rem; padding: 1rem">
+    <h2 class="section-title" style="color: var(--navy-midnight);">Nossos Treinamentos</h2>
+    <div class="subjects-grid">
+      <div class="subject-card" style="position: relative; height: 450px; border: none; overflow: hidden; border-radius: 1.5rem; display: flex; align-items: center; justify-content: center; padding: 0; text-align: center;">
+        <img src="/curso1.jpeg" alt="Comissário de Voo" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+        <!-- Overlay escuro centralizado -->
+        <div style="position: relative; z-index: 2; width: 100%; height: 100%; padding: 2rem; background: rgba(10, 14, 39, 0.6); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">Comissário de Voo</h3>
+          <p style="font-size: 1rem; opacity: 0.95; margin-bottom: 2rem; line-height: 1.5; max-width: 250px;">Treinamento completo para atuação em linhas aéreas nacionais e internacionais.</p>
+          <div style="display: inline-block; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px; color: var(--aviation-gold); border: 2px solid var(--aviation-gold); padding: 0.8rem 1.5rem; border-radius: 4px; text-transform: uppercase;">SAIBA MAIS</div>
+        </div>
+      </div>
+
+      <div class="subject-card" style="position: relative; height: 450px; border: none; overflow: hidden; border-radius: 1.5rem; display: flex; align-items: center; justify-content: center; padding: 0; text-align: center;">
+        <img src="/curso2.jpeg" alt="Agente Aeroportuário" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+        <div style="position: relative; z-index: 2; width: 100%; height: 100%; padding: 2rem; background: rgba(10, 14, 39, 0.6); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">Agente Aeroportuário</h3>
+          <p style="font-size: 1rem; opacity: 0.95; margin-bottom: 2rem; line-height: 1.5; max-width: 250px;">Capacitação para operações em solo, check-in e atendimento especializado.</p>
+          <div style="display: inline-block; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px; color: var(--aviation-gold); border: 2px solid var(--aviation-gold); padding: 0.8rem 1.5rem; border-radius: 4px; text-transform: uppercase;">SAIBA MAIS</div>
+        </div>
+      </div>
+
+      <div class="subject-card" style="position: relative; height: 450px; border: none; overflow: hidden; border-radius: 1.5rem; display: flex; align-items: center; justify-content: center; padding: 0; text-align: center;">
+        <img src="/curso3.jpeg" alt="Piloto Privado" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+        <div style="position: relative; z-index: 2; width: 100%; height: 100%; padding: 2rem; background: rgba(10, 14, 39, 0.6); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">Piloto Privado</h3>
+          <p style="font-size: 1rem; opacity: 0.95; margin-bottom: 2rem; line-height: 1.5; max-width: 250px;">Formação teórica completa para o check da ANAC com simulados exclusivos.</p>
+          <div style="display: inline-block; font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px; color: var(--aviation-gold); border: 2px solid var(--aviation-gold); padding: 0.8rem 1.5rem; border-radius: 4px; text-transform: uppercase;">SAIBA MAIS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let currentSlide = 0;
+      const inner = document.getElementById('carousel-inner');
+      if (inner) {
+        setInterval(() => {
+          currentSlide = (currentSlide + 1) % 3;
+          inner.style.transform = `translateX(-${currentSlide * 33.333}%)`;
+        }, 5000);
+      }
+    });
+  </script>
+
+  <!-- Stage 4: Rule Section -->
+  <section id="regras" class="rules-section">
+    <div class="rules-container">
+      <div class="rules-header">
+        <h2 class="section-title">O Algoritmo de Aprovação</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-top: -3rem; margin-bottom: 4rem;">O nosso sistema funciona exatamente como a banca oficial da ANAC.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="text-accent">CIDA</span> SIMULADOS
+        <p style="font-size: 0.9rem; color: #64748b; margin-top: 1rem; max-width: 300px;">
+          Centro de Instrução Aéreo. A plataforma definitiva para sua formação aeronáutica.
+        </p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h5 style="color: white; margin-bottom: 1.5rem; font-size: 1rem;">Navegação</h5>
+          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.8rem;">
+            <li><a href="#materias">Matérias</a></li>
+            <li><a href="#regras">Regras</a></li>
+            <li><%= link_to "Login", new_user_session_path %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <%= Time.current.year %> Centro de Instrução Aéreo. Todos os direitos reservados.
+    </div>
+  </footer>
+</div>
