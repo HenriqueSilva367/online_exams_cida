@@ -102,5 +102,6 @@ class ExamSessionsController < ApplicationController
       correct += 1 if sa.answer&.is_correct
     end
     @exam_session.update!(score: correct)
+    @exam_session.calculate_anac_result! if @exam_session.exam.anac_pp?
   end
 end
