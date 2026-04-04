@@ -13,18 +13,27 @@
     </div>
   </nav>
 
-  <!-- Hero Section (Venda / Alinhamento Esquerda) -->
+  <!-- Hero Section com Slider de Background -->
   <header class="hero-sales-section">
-    <div class="hero-content" style="max-width: 700px; text-align: left; margin: 0;">
-      <h1 class="hero-title" style="text-align: left; margin-bottom: 1.5rem;">
-        Sua Carreira na Aviação <br><span class="text-gold" style="font-size: 4.5rem;">Começa Aqui!</span>
-      </h1>
-      <p style="font-size: 1.4rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 3rem; line-height: 1.6; font-weight: 400; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-        Formamos os melhores profissionais do céu. <br>Escolha o seu curso e garanta seu futuro no mercado que mais cresce.
-      </p>
-      <div style="display: flex; gap: 1.5rem;">
-        <a href="#cursos" class="btn-hero-primary" style="border-radius: 8px;">Conhecer Cursos</a>
-        <a href="#" class="btn-hero-secondary" style="border-radius: 8px;">Falar com Consultor</a>
+    <div class="hero-slider">
+      <div class="hero-slide active" style="background-image: url('/banner1.avif');"></div>
+      <div class="hero-slide" style="background-image: url('/cockpit1.avif');"></div>
+      <div class="hero-slide" style="background-image: url('/cockpit2.avif');"></div>
+    </div>
+    <div class="hero-sales-overlay"></div>
+    
+    <div class="hero-content-wrapper">
+      <div class="hero-content" style="max-width: 700px; text-align: left; margin: 0;">
+        <h1 class="hero-title" style="text-align: left; margin-bottom: 1.5rem;">
+          Sua Carreira na Aviação <br><span class="text-gold" style="font-size: 4.5rem;">Começa Aqui!</span>
+        </h1>
+        <p style="font-size: 1.4rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 3rem; line-height: 1.6; font-weight: 400; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+          Formamos os melhores profissionais do céu. <br>Escolha o seu curso e garanta seu futuro no mercado que mais cresce.
+        </p>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="#cursos" class="btn-hero-primary" style="border-radius: 8px;">Conhecer Cursos</a>
+          <a href="#" class="btn-hero-secondary" style="border-radius: 8px;">Falar com Consultor</a>
+        </div>
       </div>
     </div>
   </header>
@@ -83,6 +92,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
+      // Carousel de Cursos (Existente)
       let currentSlide = 0;
       const inner = document.getElementById('carousel-inner');
       if (inner) {
@@ -90,6 +100,17 @@
           currentSlide = (currentSlide + 1) % 3;
           inner.style.transform = `translateX(-${currentSlide * 33.333}%)`;
         }, 5000);
+      }
+
+      // Hero Background Slider (Novo)
+      const heroSlides = document.querySelectorAll('.hero-slide');
+      let currentHeroSlide = 0;
+      if (heroSlides.length > 0) {
+        setInterval(() => {
+          heroSlides[currentHeroSlide].classList.remove('active');
+          currentHeroSlide = (currentHeroSlide + 1) % heroSlides.length;
+          heroSlides[currentHeroSlide].classList.add('active');
+        }, 6000); // 6 segundos por imagem
       }
     });
   </script>

@@ -487,31 +487,58 @@ body {
   min-height: 100vh;
 }
 
+/* Hero Slider Section */
 .hero-sales-section {
   position: relative;
   height: 80vh;
   min-height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0 10%;
-  background: linear-gradient(to right, rgba(10, 14, 39, 0.9) 20%, rgba(10, 14, 39, 0.2) 100%), url('/banner1.avif');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  border-bottom: 4px solid var(--aviation-gold);
   overflow: hidden;
+  border-bottom: 4px solid var(--aviation-gold);
 }
 
-.hero-sales-section::before {
-  content: '';
+.hero-slider {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 20% 50%, rgba(0, 71, 171, 0.15) 0%, transparent 50%);
-  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.hero-slide.active {
+  opacity: 1;
+}
+
+.hero-sales-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(10, 14, 39, 0.9) 25%, rgba(10, 14, 39, 0.3) 100%);
+  z-index: 2;
+}
+
+.hero-content-wrapper {
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 10%;
 }
 
 
