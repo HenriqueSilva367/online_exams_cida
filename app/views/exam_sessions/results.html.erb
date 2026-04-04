@@ -5,6 +5,74 @@
 
 <div style="max-width: 900px; margin: 0 auto; padding-bottom: 4rem;">
 
+  <% if @exam.anac_pp? %>
+    <!-- Bloco de Resultado ANAC Detalhado -->
+    <div style="background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 1.5rem; padding: 2.5rem; margin-bottom: 4rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+      <h2 style="text-align: center; margin-bottom: 2rem; color: var(--text-main); font-size: 1.8rem; font-weight: 800;">Resultado Detalhado por Matéria (ANAC)</h2>
+      
+      <div style="text-align: center; margin-bottom: 2.5rem;">
+        <% 
+          status_color = case @exam_session.result_status
+                        when 'approved' then '#10b981'
+                        when 'second_chance' then '#f59e0b'
+                        else '#ef4444'
+                        end
+          status_text = case @exam_session.result_status
+                        when 'approved' then 'APROVADO'
+                        when 'second_chance' then 'SEGUNDA ÉPOCA'
+                        when 'failed' then 'REPROVADO'
+                        else 'PENDENTE'
+                        end
+        %>
+        <span style="font-size: 1.3rem; font-weight: 900; padding: 1rem 2.5rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 2px; background: <%= status_color %>; color: white;">
+          STATUS FINAL: <%= status_text %>
+        </span>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: separate; border-spacing: 0 0.8rem;">
+          <thead>
+            <tr style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; font-weight: 700;">
+              <th style="text-align: left; padding: 0 1rem;">Matéria</th>
+              <th style="text-align: center; padding: 0 1rem;">Acertos</th>
+              <th style="text-align: center; padding: 0 1rem;">Total</th>
+              <th style="text-align: center; padding: 0 1rem;">Mínimo (14)</th>
+              <th style="text-align: center; padding: 0 1rem;">Avaliação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% (@exam_session.detailed_results || {}).each do |id, data| %>
+              <tr style="background: rgba(0,0,0,0.02); border-radius: 1rem;">
+                <td style="padding: 1.5rem 1rem; border-radius: 1rem 0 0 1rem; font-weight: 600; font-size: 1.1rem;"><%= data['title'] %></td>
+                <td style="padding: 1.5rem 1rem; text-align: center; font-size: 1.3rem; font-weight: 800;"><%= data['correct'] %></td>
+                <td style="padding: 1.5rem 1rem; text-align: center; color: var(--text-muted);"><%= data['total'] %></td>
+                <td style="padding: 1.5rem 1rem; text-align: center; color: var(--text-muted);">14</td>
+                <td style="padding: 1.5rem 1rem; border-radius: 0 1rem 1rem 0; text-align: center;">
+                  <% if data['correct'].to_i >= 14 %>
+                    <span style="background: #10b981; color: white; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: bold;">✓ OK</span>
+                  <% elsif data['correct'].to_i < 6 %>
+                    <span style="background: #ef4444; color: white; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: bold;">✖ FALHA CRÍTICA</span>
+                  <% else %>
+                    <span style="background: #f59e0b; color: white; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: bold;">⚠ ABAIXO</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      
+      <div style="margin-top: 2rem; padding: 1.5rem; background: #fefce8; border-radius: 1rem; border: 1px solid #fef08a;">
+        <h4 style="margin: 0 0 0.5rem 0; color: #854d0e; font-size: 1rem; font-weight: 700;">Regra de Aprovação ANAC:</h4>
+        <ul style="margin: 0; padding-left: 1.5rem; color: #713f12; font-size: 0.9rem; line-height: 1.6;">
+          <li>Aprovação: Mínimo de 14 acertos em CADA uma das 5 matérias.</li>
+          <li>Segunda Época: Até 2 matérias abaixo de 14 acertos, mas NENHUMA abaixo de 6 acertos.</li>
+          <li>Reprovação: 3 ou mais matérias abaixo de 14 OU qualquer matéria abaixo de 6.</li>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
   <!-- Painel de Desempenho / Resumo Numérico -->
   <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 4rem;">
     <div style="background: var(--card-bg); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
