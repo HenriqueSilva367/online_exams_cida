@@ -13,11 +13,13 @@ class Admin::AnswersController < Admin::BaseController
     end
   end
 
-  # DELETE /admin/answers/:id
   def destroy
     @question = @answer.question
-    @answer.destroy
-    redirect_to admin_question_path(@question), notice: 'Alternativa removida.'
+    if @answer.destroy
+      redirect_to admin_question_path(@question), notice: 'Alternativa removida.'
+    else
+      redirect_to admin_question_path(@question), alert: @answer.errors.full_messages.to_sentence
+    end
   end
 
   private

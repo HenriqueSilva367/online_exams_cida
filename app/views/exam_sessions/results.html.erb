@@ -1,6 +1,6 @@
 <div class="dashboard-header" style="text-align: center; margin-bottom: 3rem;">
-  <h1 class="page-title">Boletim Final de Resultados</h1>
-  <p class="page-subtitle">Prova: <strong><%= @exam.title %></strong> da Trilha <%= @exam.topic.title %></p>
+  <h1 class="page-title"><%= t('.title') %></h1>
+  <p class="page-subtitle"><%= t('.subtitle', exam: @exam.title, topic: @exam.topic.title) %></p>
 </div>
 
 <div style="max-width: 900px; margin: 0 auto; padding-bottom: 4rem;">
@@ -8,7 +8,7 @@
   <% if @exam.anac_pp? %>
     <!-- Bloco de Resultado ANAC Detalhado -->
     <div style="background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 1.5rem; padding: 2.5rem; margin-bottom: 4rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
-      <h2 style="text-align: center; margin-bottom: 2rem; color: var(--text-main); font-size: 1.8rem; font-weight: 800;">Resultado Detalhado por Matéria (ANAC)</h2>
+      <h2 style="text-align: center; margin-bottom: 2rem; color: var(--text-main); font-size: 1.8rem; font-weight: 800;"><%= t('.detailed_anac.title') %></h2>
       
       <div style="text-align: center; margin-bottom: 2.5rem;">
         <% 
@@ -18,14 +18,14 @@
                         else '#ef4444'
                         end
           status_text = case @exam_session.result_status
-                        when 'approved' then 'APROVADO'
-                        when 'second_chance' then 'SEGUNDA ÉPOCA'
-                        when 'failed' then 'REPROVADO'
-                        else 'PENDENTE'
+                        when 'approved' then t('.status.approved')
+                        when 'second_chance' then t('.status.second_chance')
+                        when 'failed' then t('.status.failed')
+                        else t('.status.pending')
                         end
         %>
         <span style="font-size: 1.3rem; font-weight: 900; padding: 1rem 2.5rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 2px; background: <%= status_color %>; color: white;">
-          STATUS FINAL: <%= status_text %>
+          <%= t('.status.final', status: status_text) %>
         </span>
       </div>
 
@@ -33,11 +33,11 @@
         <table style="width: 100%; border-collapse: separate; border-spacing: 0 0.8rem;">
           <thead>
             <tr style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; font-weight: 700;">
-              <th style="text-align: left; padding: 0 1rem;">Matéria</th>
-              <th style="text-align: center; padding: 0 1rem;">Acertos</th>
-              <th style="text-align: center; padding: 0 1rem;">Total</th>
-              <th style="text-align: center; padding: 0 1rem;">Mínimo (14)</th>
-              <th style="text-align: center; padding: 0 1rem;">Avaliação</th>
+              <th style="text-align: left; padding: 0 1rem;"><%= t('.detailed_anac.table.subject') %></th>
+              <th style="text-align: center; padding: 0 1rem;"><%= t('.detailed_anac.table.correct') %></th>
+              <th style="text-align: center; padding: 0 1rem;"><%= t('.detailed_anac.table.total') %></th>
+              <th style="text-align: center; padding: 0 1rem;"><%= t('.detailed_anac.table.min') %></th>
+              <th style="text-align: center; padding: 0 1rem;"><%= t('.detailed_anac.table.evaluation') %></th>
             </tr>
           </thead>
           <tbody>
@@ -49,11 +49,11 @@
                 <td style="padding: 1.5rem 1rem; text-align: center; color: var(--text-muted);">14</td>
                 <td style="padding: 1.5rem 1rem; border-radius: 0 1rem 1rem 0; text-align: center;">
                   <% if data['correct'].to_i >= 14 %>
-                    <span style="background: #10b981; color: white; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: bold;">✓ OK</span>
+                    <span style="background: #10b981; color: white; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: bold;"><%= t('.detailed_anac.evaluation.ok') %></span>
                   <% elsif data['correct'].to_i < 6 %>
-                    <span style="background: #ef4444; color: white; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: bold;">✖ FALHA CRÍTICA</span>
+                    <span style="background: #ef4444; color: white; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: bold;"><%= t('.detailed_anac.evaluation.critical') %></span>
                   <% else %>
-                    <span style="background: #f59e0b; color: white; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: bold;">⚠ ABAIXO</span>
+                    <span style="background: #f59e0b; color: white; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: bold;"><%= t('.detailed_anac.evaluation.below') %></span>
                   <% end %>
                 </td>
               </tr>
@@ -63,11 +63,11 @@
       </div>
       
       <div style="margin-top: 2rem; padding: 1.5rem; background: #fefce8; border-radius: 1rem; border: 1px solid #fef08a;">
-        <h4 style="margin: 0 0 0.5rem 0; color: #854d0e; font-size: 1rem; font-weight: 700;">Regra de Aprovação ANAC:</h4>
+        <h4 style="margin: 0 0 0.5rem 0; color: #854d0e; font-size: 1rem; font-weight: 700;"><%= t('.anac_rules.title') %></h4>
         <ul style="margin: 0; padding-left: 1.5rem; color: #713f12; font-size: 0.9rem; line-height: 1.6;">
-          <li>Aprovação: Mínimo de 14 acertos em CADA uma das 5 matérias.</li>
-          <li>Segunda Época: Até 2 matérias abaixo de 14 acertos, mas NENHUMA abaixo de 6 acertos.</li>
-          <li>Reprovação: 3 ou mais matérias abaixo de 14 OU qualquer matéria abaixo de 6.</li>
+          <li><%= t('.anac_rules.rule1') %></li>
+          <li><%= t('.anac_rules.rule2') %></li>
+          <li><%= t('.anac_rules.rule3') %></li>
         </ul>
       </div>
     </div>
@@ -77,38 +77,35 @@
   <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 4rem;">
     <div style="background: var(--card-bg); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
       <div style="font-size: 3.5rem; font-weight: 800; color: var(--primary);"><%= @accuracy %>%</div>
-      <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; font-weight: 600;">Sua Nota/Precisão</div>
+      <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; font-weight: 600;"><%= t('.performance.accuracy') %></div>
     </div>
     <div style="background: var(--card-bg); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
       <div style="font-size: 3.5rem; font-weight: 800; color: #10b981;"><%= @correct_answers %></div>
-      <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; font-weight: 600;">Acertos 🎉</div>
+      <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; font-weight: 600;"><%= t('.performance.correct') %></div>
     </div>
     <div style="background: var(--card-bg); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
       <div style="font-size: 3.5rem; font-weight: 800; color: #ef4444;"><%= @incorrect_answers %></div>
-      <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; font-weight: 600;">Erros / Brancos ✖️</div>
+      <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.5rem; font-weight: 600;"><%= t('.performance.incorrect') %></div>
     </div>
   </div>
 
-  <h3 style="margin-bottom: 2rem; text-align: center; color: var(--text-main); font-size: 1.8rem; border-bottom: 2px dashed var(--border-color); padding-bottom: 1rem;">Gabarito Detalhado</h3>
+  <h3 style="margin-bottom: 2rem; text-align: center; color: var(--text-main); font-size: 1.8rem; border-bottom: 2px dashed var(--border-color); padding-bottom: 1rem;"><%= t('.feedback.title') %></h3>
 
   <!-- Gabarito Visual Card by Card -->
   <div style="display: flex; flex-direction: column; gap: 2rem;">
     <% @questions.each_with_index do |q, index| %>
       <% 
-        # Encontra a resposta dada pelo aluno nesta sessão
         student_answer = @exam_session.session_answers.find { |sa| sa.question_id == q.id }&.answer
         is_hit = student_answer&.is_correct
         card_border = is_hit ? '#34d399' : '#fca5a5'
         card_bg = is_hit ? '#f0fdf4' : '#fef2f2'
-        
-        # Se student_answer nil (nem marcou), considera Erro, mas avisa "Em Branco"
       %>
       
       <div style="border: 2px solid <%= card_border %>; background: <%= card_bg %>; border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);">
         <h4 style="margin: 0 0 1.5rem 0; font-size: 1.15rem; color: #1f2937; line-height: 1.5;">
           <strong><%= index + 1 %>.</strong> <%= q.title %>
           <% if student_answer.nil? %>
-             <span style="background: #fef08a; color: #854d0e; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: bold; margin-left: 1rem;">Deixada em Branco</span>
+             <span style="background: #fef08a; color: #854d0e; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: bold; margin-left: 1rem;"><%= t('.feedback.left_blank') %></span>
           <% end %>
         </h4>
         
@@ -135,11 +132,11 @@
               
               <!-- Badges laterais informativas -->
               <% if is_student_selection && is_actual_correct %>
-                <span style="margin-left: auto; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.25); color: white; padding: 0.4rem 0.8rem; border-radius: 999px;">Sua Resposta Correta</span>
+                <span style="margin-left: auto; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.25); color: white; padding: 0.4rem 0.8rem; border-radius: 999px;"><%= t('.feedback.your_correct') %></span>
               <% elsif is_student_selection && !is_actual_correct %>
-                <span style="margin-left: auto; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.25); color: white; padding: 0.4rem 0.8rem; border-radius: 999px;">Onde você Errou</span>
+                <span style="margin-left: auto; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.25); color: white; padding: 0.4rem 0.8rem; border-radius: 999px;"><%= t('.feedback.where_failed') %></span>
               <% elsif is_actual_correct && !is_student_selection %>
-                <span style="margin-left: auto; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.15); color: white; padding: 0.4rem 0.8rem; border-radius: 999px;">Gabarito Correto da Banca</span>
+                <span style="margin-left: auto; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; background: rgba(0,0,0,0.15); color: white; padding: 0.4rem 0.8rem; border-radius: 999px;"><%= t('.feedback.actual_correct') %></span>
               <% end %>
             </li>
           <% end %>
@@ -149,6 +146,6 @@
   </div>
 
   <div style="text-align: center; margin-top: 4rem;">
-    <%= link_to '← Voltar para Minhas Provas', exam_sessions_path, class: "btn-primary", style: "padding: 0.8rem 2.5rem; font-size: 1.1rem; border-radius: 999px; text-decoration: none;" %>
+    <%= link_to t('.actions.back'), exam_sessions_path, class: "btn-primary", style: "padding: 0.8rem 2.5rem; font-size: 1.1rem; border-radius: 999px; text-decoration: none;" %>
   </div>
 </div>

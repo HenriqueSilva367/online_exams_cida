@@ -10,24 +10,49 @@ class ExamSessionsController < ApplicationController
   def show
     # Renders the exam taking view
     @exam = @exam_session.exam
-    @questions = @exam.questions.includes(:answers)
+    @session_answers = @exam_session.session_answers.index_by(&:question_id)
+    
+    # If the session already has pre-filled questions (random sourcing), use them!
+    if @session_answers.any?
+      @questions = Question.where(id: @session_answers.keys).includes(:answers)
+    else
+      # Standard fixed exam
+      @questions = if @exam_session.selected_topic_id
+                     @exam.questions.where(topic_id: @exam_session.selected_topic_id).includes(:answers)
+                   else
+                     @exam.questions.includes(:answers)
+                   end
+    end
   end
 
   def create
     @exam = Exam.find(params[:exam_id])
-    # check if there's an active one? Or just create
     @exam_session = current_user.exam_sessions.create!(
       exam: @exam,
+      selected_topic_id: params[:selected_topic_id],
       status: :in_progress,
       started_at: Time.current
     )
+
+    # If it's a topic-based simulation, pre-fill random questions to "lock" the set
+    if @exam_session.selected_topic_id
+      random_questions = Question.where(topic_id: @exam_session.selected_topic_id)
+                                 .order("RANDOM()")
+                                 .limit(20)
+      
+      random_questions.each do |q|
+        @exam_session.session_answers.create!(question: q)
+      end
+    end
+
     redirect_to @exam_session
   end
 
   def update
     # Save a student's answer as they click it or submit it
-    # params[:exam_session][:responses] => { question_id => answer_id }
-    responses = params.require(:exam_session).permit(responses: {})[:responses] || {}
+    # Use fetch to avoid error if exam_session key is missing (e.g. no answers selected)
+    exam_session_params = params.fetch(:exam_session, {})
+    responses = exam_session_params.permit(responses: {})[:responses] || {}
     
     responses.each do |question_id, answer_id|
       session_answer = @exam_session.session_answers.find_or_initialize_by(question_id: question_id)
@@ -35,7 +60,7 @@ class ExamSessionsController < ApplicationController
       session_answer.save!
     end
 
-    if params[:commit] == 'Submit Exam'
+    if params[:commit] == 'Submit Exam' || params[:status] == 'completed'
       finish_session(:completed)
       redirect_to results_exam_session_path(@exam_session)
     else

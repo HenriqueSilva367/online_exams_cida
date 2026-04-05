@@ -36,11 +36,13 @@ class Admin::QuestionsController < Admin::BaseController
     end
   end
 
-  # DELETE /admin/questions/:id
   def destroy
     @exam = @question.exam
-    @question.destroy
-    redirect_to admin_exam_path(@exam), notice: 'Questão e todas opções foram removidas.'
+    if @question.destroy
+      redirect_to admin_exam_path(@exam), notice: 'Questão e todas opções foram removidas.'
+    else
+      redirect_to admin_exam_path(@exam), alert: @question.errors.full_messages.to_sentence
+    end
   end
 
   private
@@ -54,6 +56,6 @@ class Admin::QuestionsController < Admin::BaseController
   end
 
   def question_params
-    params.require(:question).permit(:title)
+    params.require(:question).permit(:exam_id, :title, :topic_id, :explanation, :explanation_image, explanation_images: [])
   end
 end

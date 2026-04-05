@@ -1,7 +1,6 @@
-<div class="dashboard-header">
   <div>
-    <h1 class="page-title">Provas Abertas</h1>
-    <p class="page-subtitle">Escolha uma disciplina para começar a praticar</p>
+    <h1 class="page-title"><%= t('.title') %></h1>
+    <p class="page-subtitle"><%= t('.subtitle') %></p>
   </div>
 </div>
 
@@ -13,15 +12,53 @@
         <p class="topic-desc"><%= truncate(topic.description, length: 120) %></p>
       </div>
       <div class="topic-card-footer" style="justify-content: space-between;">
-        <span style="color: var(--text-muted); font-size: 0.85rem;"><%= pluralize(topic.exams.count, "Prova disponível", "Provas disponíveis") %></span>
-        <%= link_to 'Acessar Trilha', topic_path(topic), class: "btn-primary", style: "padding: 0.4rem 1rem; font-size: 0.85rem; text-decoration: none;" %>
+        <span style="color: var(--text-muted); font-size: 0.85rem;"><%= t('.exams_count', count: topic.exams.count) %></span>
+        <% primary_exam = topic.exams.order(created_at: :desc).first %>
+        
+        <% if primary_exam %>
+          <button type="button" onclick="document.getElementById('modal-topic-<%= topic.id %>').showModal()" class="btn-primary" style="padding: 0.4rem 1rem; font-size: 0.85rem; border: none; cursor: pointer;">
+            Iniciar Prova
+          </button>
+
+          <!-- Modal de Início Direto da Dashboard -->
+          <dialog id="modal-topic-<%= topic.id %>" class="exam-modal">
+            <div class="modal-content" style="text-align: left;">
+              <h3 style="margin-top: 0; color: var(--text-main);">Escolha sua Matéria</h3>
+              <p style="color: var(--text-muted); line-height: 1.5;">Simulado: <strong><%= primary_exam.title %></strong></p>
+              
+              <div style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem;">
+                <label style="display: block; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.95rem;">Modo de Estudo:</label>
+                <%= form_with url: exam_exam_sessions_path(primary_exam), method: :post, local: true do |f| %>
+                  <div style="margin-bottom: 1rem;">
+                    <%= f.select :selected_topic_id, 
+                        options_from_collection_for_select(Topic.where(id: primary_exam.questions.select(:topic_id).distinct.compact), :id, :title),
+                        { include_blank: "Simulado Completo (Todas as Matérias)" },
+                        { class: "subject-select-field", style: "width: 100%; padding: 0.6rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-size: 0.9rem;" } 
+                    %>
+                  </div>
+                  
+                  <p style="font-size: 0.85rem; color: #ef4444; background: #fef2f2; padding: 0.5rem; border-radius: 0.4rem; margin-bottom: 1.5rem;">
+                    ⏱ O tempo será ajustado para <strong><%= (primary_exam.time_duration / 5.0).ceil %> min</strong> se escolher apenas 1 matéria.
+                  </p>
+
+                  <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" onclick="document.getElementById('modal-topic-<%= topic.id %>').close()" class="btn-outline" style="border: none; cursor: pointer;">Cancelar</button>
+                    <%= f.submit 'Iniciar Agora!', class: "btn-primary", style: "border: none; cursor: pointer;" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </dialog>
+        <% else %>
+          <%= link_to 'Detalhes', topic_path(topic), class: "btn-outline", style: "padding: 0.4rem 1rem; font-size: 0.85rem; text-decoration: none;" %>
+        <% end %>
       </div>
     </div>
   <% end %>
 
   <% if @topics.empty? %>
     <div class="empty-state">
-      <p>Nenhuma disciplina disponível no momento.</p>
+      <p><%= t('.empty_state') %></p>
     </div>
   <% end %>
 </div>

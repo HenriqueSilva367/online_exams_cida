@@ -17,7 +17,25 @@
   <div class="form-group">
     <%= form.label :title, "Enunciado da Pergunta", class: "form-label" %>
     <div class="input-wrapper">
-      <%= form.text_area :title, class: "form-input", rows: 4, placeholder: "Ex: Qual é a capital do Brasil?" %>
+      <%= form.text_area :title, class: "form-input", rows: 4, placeholder: "Ex: Segundo o CBA..." %>
+    </div>
+  </div>
+
+  <div class="form-group" style="margin-top: 1.5rem;">
+    <%= form.label :explanation, "Base Legal / Comentário Profissional", class: "form-label", style: "color: var(--primary);" %>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+      <strong>Dica PRO:</strong> Use etiquetas como <code>[foto1]</code>, <code>[foto2]</code> no meio do texto para posicionar as imagens exatamente onde você quer.
+    </p>
+    <div class="input-wrapper">
+      <%= form.text_area :explanation, class: "form-input", rows: 6, placeholder: "Ex: Como vemos na [foto1], o Artigo 156 diz..." %>
+    </div>
+  </div>
+
+  <div class="form-group" style="margin-top: 1.5rem;">
+    <%= form.label :explanation_images, "Anexar Imagens Técnicas (Galeria)", class: "form-label" %>
+    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Você pode selecionar **vários arquivos** de uma vez segurando o Shift ou Ctrl.</p>
+    <div class="input-wrapper" style="background: white; padding: 1rem; border: 2px dashed #cbd5e1; border-radius: 0.5rem;">
+      <%= form.file_field :explanation_images, multiple: true, accept: 'image/png,image/jpeg,image/gif', class: "form-input" %>
     </div>
   </div>
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_03_002733) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_05_194901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,7 +62,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_03_002733) do
     t.datetime "updated_at", null: false
     t.integer "result_status", default: 0
     t.jsonb "detailed_results"
+    t.bigint "selected_topic_id"
     t.index ["exam_id"], name: "index_exam_sessions_on_exam_id"
+    t.index ["selected_topic_id"], name: "index_exam_sessions_on_selected_topic_id"
     t.index ["user_id"], name: "index_exam_sessions_on_user_id"
   end
 
@@ -84,6 +86,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_03_002733) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "topic_id"
+    t.text "explanation"
     t.index ["exam_id"], name: "index_questions_on_exam_id"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
@@ -124,6 +127,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_03_002733) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "answers", "questions"
   add_foreign_key "exam_sessions", "exams"
+  add_foreign_key "exam_sessions", "topics", column: "selected_topic_id"
   add_foreign_key "exam_sessions", "users"
   add_foreign_key "exams", "topics"
   add_foreign_key "questions", "exams"

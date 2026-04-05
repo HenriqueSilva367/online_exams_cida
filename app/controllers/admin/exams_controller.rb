@@ -37,11 +37,13 @@ class Admin::ExamsController < Admin::BaseController
     end
   end
 
-  # DELETE /admin/exams/:id
   def destroy
     @topic = @exam.topic
-    @exam.destroy
-    redirect_to admin_topic_path(@topic), notice: 'Prova foi excluída silenciosamente.'
+    if @exam.destroy
+      redirect_to admin_topic_path(@topic), notice: 'Prova foi excluída com sucesso.'
+    else
+      redirect_to admin_topic_path(@topic), alert: @exam.errors.full_messages.to_sentence
+    end
   end
 
   private

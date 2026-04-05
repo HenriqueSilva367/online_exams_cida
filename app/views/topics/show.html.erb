@@ -46,9 +46,27 @@
                   O tempo de <strong><%= exam.time_duration %> minutos</strong> começará a rodar assim que você aceitar, e <strong>não pode ser pausado</strong> mesmo se você fechar a aba!
                 </p>
                 
-                <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end;">
-                  <button type="button" onclick="document.getElementById('modal-exam-<%= exam.id %>').close()" class="btn-outline" style="border: none; cursor: pointer;">Cancelar</button>
-                  <%= button_to 'Sim, Iniciar Minha Prova!', exam_exam_sessions_path(exam), method: :post, class: "btn-primary", form: { style: "margin: 0;" } %>
+                <div style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem;">
+                  <label style="display: block; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.95rem;">Modo de Estudo:</label>
+                  <%= form_with url: exam_exam_sessions_path(exam), method: :post, local: true do |f| %>
+                    <div style="margin-bottom: 1rem;">
+                      <%= f.select :selected_topic_id, 
+                          # Aqui buscamos os tópicos/matérias que existem nas questões dessa prova
+                          options_from_collection_for_select(Topic.where(id: exam.questions.select(:topic_id).distinct.compact), :id, :title),
+                          { include_blank: "Simulado Completo (Todas as Matérias)" },
+                          { class: "subject-select-field", style: "width: 100%; padding: 0.6rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-size: 0.9rem;" } 
+                      %>
+                    </div>
+
+                    <p id="info-timer-<%= exam.id %>" style="font-size: 0.8rem; color: #475569; margin: 0 0 1.5rem 0;">
+                      <i class="fas fa-clock"></i> Selecione acima para ajustar o tempo.
+                    </p>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                      <button type="button" onclick="document.getElementById('modal-exam-<%= exam.id %>').close()" class="btn-outline" style="border: none; cursor: pointer;">Cancelar</button>
+                      <%= f.submit 'Sim, Iniciar!', class: "btn-primary", style: "border: none; cursor: pointer;" %>
+                    </div>
+                  <% end %>
                 </div>
               </div>
             </dialog>

@@ -2,7 +2,7 @@ class TopicsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @topics = Topic.all
+    @topics = Topic.includes(:exams).all
   end
 
   def show

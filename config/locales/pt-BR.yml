@@ -1,0 +1,249 @@
+pt-BR:
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d de %b"
+      long: "%d de %B de %Y"
+    day_names:
+      - "Domingo"
+      - "Segunda"
+      - "Terça"
+      - "Quarta"
+      - "Quinta"
+      - "Sexta"
+      - "Sábado"
+    abbr_day_names:
+      - "Dom"
+      - "Seg"
+      - "Ter"
+      - "Qua"
+      - "Qui"
+      - "Sex"
+      - "Sáb"
+    month_names:
+      - ~
+      - "Janeiro"
+      - "Fevereiro"
+      - "Março"
+      - "Abril"
+      - "Maio"
+      - "Junho"
+      - "Julho"
+      - "Agosto"
+      - "Setembro"
+      - "Outubro"
+      - "Novembro"
+      - "Dezembro"
+    abbr_month_names:
+      - ~
+      - "Jan"
+      - "Fev"
+      - "Mar"
+      - "Abr"
+      - "Mai"
+      - "Jun"
+      - "Jul"
+      - "Ago"
+      - "Set"
+      - "Out"
+      - "Nov"
+      - "Dez"
+    order:
+      - :day
+      - :month
+      - :year
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M"
+      short: "%d/%m %H:%M"
+      long: "%d de %B de %Y às %H:%M"
+    am: "am"
+    pm: "pm"
+  hello: "Olá mundo"
+  common:
+    actions:
+      edit: "Editar"
+      delete: "Excluir"
+      save: "Salvar"
+      cancel: "Cancelar"
+      back: "Voltar"
+      submit: "Enviar"
+      confirm: "Confirmar"
+      show: "Ver"
+    navbar:
+      home: "Início"
+      dashboard: "Painel"
+      topics: "Matérias"
+      students: "Alunos"
+      reports: "Boletins"
+      my_exams: "Meus Resultados"
+      admin: "Administrador"
+      student: "Estudante"
+      logout: "Sair"
+      sign_up: "Cadastrar"
+      login: "Entrar"
+      hello: "Olá, %{name}"
+    messages:
+      loading: "Carregando..."
+      empty: "Nenhum item encontrado."
+      confirm_delete: "Tem certeza que deseja excluir?"
+
+  devise:
+    common:
+      new: "Novo"
+      edit: "Editar"
+      delete: "Excluir"
+      details: "Detalhes"
+      confirm: "Tem certeza?"
+      empty: "Nenhum item cadastrado."
+    sessions:
+      new:
+        title: "Bem-vindo de volta"
+        subtitle: "Entre na sua conta da CIDA Simulados"
+        submit: "Entrar"
+        remember_me: "Lembrar de mim"
+    registrations:
+      new:
+        title: "Criar uma conta"
+        subtitle: "Junte-se à CIDA e comece a treinar"
+        submit: "Cadastrar"
+        full_name: "Nome Completo"
+        password_confirmation: "Confirmar Senha"
+    passwords:
+      new:
+        title: "Esqueceu sua senha?"
+        subtitle: "Enviaremos instruções de recuperação"
+        submit: "Enviar instruções"
+    shared:
+      links:
+        log_in: "Entrar"
+        sign_up: "Cadastrar-se"
+        forgot_password: "Esqueceu sua senha?"
+        receive_confirmation: "Não recebeu instruções de confirmação?"
+        receive_unlock: "Não recebeu instruções de desbloqueio?"
+        sign_in_with: "Entrar com %{provider}"
+  
+  activerecord:
+    attributes:
+      user:
+        email: "E-mail"
+        password: "Senha"
+        password_confirmation: "Confirmar Senha"
+        name: "Nome Completo"
+        remember_me: "Lembrar de mim"
+
+  admin:
+    common:
+      new: "Novo"
+      edit: "Editar"
+      delete: "Excluir"
+      details: "Detalhes"
+      confirm: "Tem certeza?"
+      empty: "Nenhum item cadastrado."
+    topics:
+      index:
+        title: "Trilhas & Tópicos"
+        subtitle: "Gerencie os temas das provas e disciplinas"
+        new_topic: "Novo Tópico"
+    users:
+      index:
+        title: "Alunos"
+        subtitle: "Gerencie os estudantes cadastrados"
+        table:
+          name: "Nome"
+          email: "Email"
+          role: "Nível"
+          joined: "Cadastrado em"
+
+  topics:
+    index:
+      title: "Provas Abertas"
+      subtitle: "Escolha uma disciplina para começar a praticar"
+      access_trail: "Acessar Trilha"
+      empty_state: "Nenhuma disciplina disponível no momento."
+      exams_count:
+        one: "1 Prova disponível"
+        other: "%{count} Provas disponíveis"
+
+  exams:
+    index:
+      title: "Simulados Disponíveis"
+      empty_state: "Nenhum simulado disponível para este tópico."
+    show:
+      start_exam: "Iniciar Simulado"
+      duration: "Duração: %{time} min"
+      questions_count: "%{count} questões"
+
+  exam_sessions:
+    index:
+      title: "Meus Resultados"
+      subtitle: "Histórico e pontuação de todas as suas provas passadas"
+      empty_state: "Você ainda não iniciou nenhuma prova."
+      table:
+        exam_topic: "Prova / Tema"
+        status: "Status"
+        score: "Acertos / Score"
+        started_at: "Tentativa Iniciada em"
+        action: "Ação"
+      status:
+        in_progress: "Em Andamento"
+        completed: "Concluído"
+        canceled: "Cancelado"
+        timeout: "Esgotado (Tempo)"
+      actions:
+        continue: "Continuar"
+        view_results: "Ver Boletim"
+    new:
+      title: "Novo Simulado"
+      rules: "Regras do Teste"
+      start: "Começar Agora"
+    show:
+      started_at: "Sua prova iniciou às %{time}"
+      time_remaining: "Tempo Restante"
+      submit_exam: "Finalizar e Entregar Prova"
+      question_of: "Questão %{current}:"
+      empty_questions: "A prova não possui perguntas cadastradas. Por favor contate o administrador!"
+      modal:
+        title: "Confirmação de Entrega"
+        subtitle: "Você está prestes a finalizar sua tentativa e entregar as respostas ao professor."
+        warning: "Atenção: Após confirmar a entrega, não será mais possível alterar nenhuma de suas respostas, mesmo que ainda reste tempo no relógio."
+        back: "Voltar para Revisão"
+        confirm: "Sim, Entregar Prova!"
+    results:
+      title: "Boletim Final de Resultados"
+      subtitle: "Prova: %{exam} da Trilha %{topic}"
+      detailed_anac:
+        title: "Resultado Detalhado por Matéria (ANAC)"
+        table:
+          subject: "Matéria"
+          correct: "Acertos"
+          total: "Total"
+          min: "Mínimo (14)"
+          evaluation: "Avaliação"
+        evaluation:
+          ok: "✓ OK"
+          critical: "✖ FALHA CRÍTICA"
+          below: "⚠ ABAIXO"
+      status:
+        final: "STATUS FINAL: %{status}"
+        approved: "APROVADO"
+        second_chance: "SEGUNDA ÉPOCA"
+        failed: "REPROVADO"
+        pending: "PENDENTE"
+      anac_rules:
+        title: "Regra de Aprovação ANAC:"
+        rule1: "Aprovação: Mínimo de 14 acertos em CADA uma das 5 matérias."
+        rule2: "Segunda Época: Até 2 matérias abaixo de 14 acertos, mas NENHUMA abaixo de 6 acertos."
+        rule3: "Reprovação: 3 ou mais matérias abaixo de 14 OU qualquer matéria abaixo de 6."
+      performance:
+        accuracy: "Sua Nota/Precisão"
+        correct: "Acertos 🎉"
+        incorrect: "Erros / Brancos ✖️"
+      feedback:
+        title: "Gabarito Detalhado"
+        left_blank: "Deixada em Branco"
+        your_correct: "Sua Resposta Correta"
+        where_failed: "Onde você Errou"
+        actual_correct: "Gabarito Correto da Banca"
+      actions:
+        back: "← Voltar para Minhas Provas"

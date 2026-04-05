@@ -1,17 +1,30 @@
 class ExamSession < ApplicationRecord
   belongs_to :user
   belongs_to :exam
+  belongs_to :selected_topic, class_name: 'Topic', optional: true
   has_many :session_answers, dependent: :destroy
 
   enum :status, { in_progress: 0, canceled: 1, uncompleted: 2, completed: 3 }
   enum :result_status, { pending: 0, approved: 1, failed: 2, second_chance: 3 }
 
+  def effective_duration
+    return exam.time_duration unless selected_topic.present?
+    
+    # Calculate how many subjects (topics) this exam covers in total
+    total_subjects = exam.questions.pluck(:topic_id).uniq.compact.count
+    total_subjects = 5 if total_subjects.zero? # Default for ANAC if no topics assigned yet
+    
+    (exam.time_duration.to_f / total_subjects).ceil
+  end
+
   def calculate_anac_result!
     return unless exam.anac_pp?
     
     topics_data = {}
-    questions = exam.questions.includes(:topic)
+    # Use questions that were actually present in the session (handles random pool)
+    questions = Question.where(id: session_answers.pluck(:question_id)).includes(:topic)
     
+    # Pre-fill topics_data with the correct question count from the session
     questions.each do |q|
       t_id = q.topic_id || exam.topic_id
       topics_data[t_id] ||= { correct: 0, total: 0, title: (q.topic&.title || exam.topic.title) }

@@ -1,8 +1,8 @@
 <div class="auth-page-wrapper">
   <div class="auth-card">
     <div class="auth-header">
-      <h2 class="auth-title">Create an Account</h2>
-      <p class="auth-subtitle">Join Online Exams and start learning</p>
+      <h2 class="auth-title"><%= t('.title') %></h2>
+      <p class="auth-subtitle"><%= t('.subtitle') %></p>
     </div>
 
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "auth-form" }) do |f| %>
@@ -13,24 +13,24 @@
       <% end %>
 
       <div class="form-group">
-        <%= f.label :name, "Full Name", class: "form-label" %>
+        <%= f.label :name, t('.full_name'), class: "form-label" %>
         <div class="input-wrapper">
-          <%= f.text_field :name, autofocus: true, autocomplete: "name", class: "form-input", placeholder: "John Doe" %>
+          <%= f.text_field :name, autofocus: true, autocomplete: "name", class: "form-input", placeholder: "João Silva" %>
         </div>
       </div>
 
       <div class="form-group">
-        <%= f.label :email, "Email Address", class: "form-label" %>
+        <%= f.label :email, t('activerecord.attributes.user.email'), class: "form-label" %>
         <div class="input-wrapper">
-          <%= f.email_field :email, autocomplete: "email", class: "form-input", placeholder: "you@example.com" %>
+          <%= f.email_field :email, autocomplete: "email", class: "form-input", placeholder: "seu@exemplo.com" %>
         </div>
       </div>
 
       <div class="form-group">
         <%= f.label :password, class: "form-label" do %>
-          Password
+          <%= t('activerecord.attributes.user.password') %>
           <% if @minimum_password_length %>
-            <em style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(<%= @minimum_password_length %> characters minimum)</em>
+            <em style="font-size: 0.8em; color: var(--text-muted); font-weight: normal;">(mínimo <%= @minimum_password_length %> caracteres)</em>
           <% end %>
         <% end %>
         <div class="input-wrapper">
@@ -39,15 +39,15 @@
       </div>
 
       <div class="form-group">
-        <%= f.label :password_confirmation, "Confirm Password", class: "form-label" %>
+        <%= f.label :password_confirmation, t('.password_confirmation'), class: "form-label" %>
         <div class="input-wrapper">
           <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-input", placeholder: "••••••••" %>
         </div>
       </div>
 
       <div class="form-actions">
-        <%= f.submit "Sign up", class: "btn-primary btn-block" %>
-      </div>
+        <%= f.submit t('.submit'), class: "btn-primary btn-block" %>
+      </div><%# e %>
     <% end %>
 
     <div class="auth-footer">
