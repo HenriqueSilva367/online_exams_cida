@@ -6,7 +6,7 @@
       <span style="font-weight: 700; font-size: 0.65rem; color: var(--navy-midnight); text-transform: uppercase; letter-spacing: 0.5px;">Centro de Instrução e Desenvolvimento Aéreo</span>
     </div>
     <div class="nav-links-sales">
-      <a href="#" class="nav-link-sales">Quem Somos</a>
+      <a href="#quem-somos" class="nav-link-sales">Quem Somos</a>
       <a href="#" class="nav-link-sales">Agende uma Visita</a>
       <a href="#cursos" class="nav-link-sales">Cursos</a>
       <%= link_to "Área do Aluno", new_user_session_path, class: "btn-area-aluno" %>
@@ -56,6 +56,61 @@
     </div>
   </section>
 
+  <!-- Stage 2.5: Quem Somos (Autoridade) -->
+  <section id="quem-somos" class="about-sales-section">
+    <div class="about-container">
+      <div class="about-image" style="display: flex; flex-direction: column; gap: 2rem;">
+        <img src="/hangar_escola_aviacao_1775404450116.png" alt="Nossa Infraestrutura" style="width: 100%; border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+        <img src="/simulador_aviacao_moderno.png" alt="Treinamento de Elite" style="width: 100%; border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+      </div>
+      <div class="about-text-content">
+        <h2 class="about-tag">Certificação e Autoridade</h2>
+        <h3 class="about-main-title">Liderança, Compromisso e <span class="text-gold">Reconhecimento do MEC</span></h3>
+        
+        <div class="about-description">
+          <p>Somos uma empresa especializada em fornecer cursos teóricos de aviação para aqueles que desejam se tornar pilotos ou profissionais do céu. Nossa equipe é composta por <strong>instrutores experientes e altamente qualificados</strong>, com anos de atuação no setor e o compromisso de oferecer uma formação de elite com validade nacional.</p>
+        </div>
+
+        <div class="about-features">
+          <div class="feature-item">
+            <div class="feature-icon" style="background: transparent; box-shadow: none;">
+              <img src="/selo_mec.png" alt="Selo MEC" style="width: 55px; height: 55px; object-fit: contain;">
+            </div>
+            <div class="feature-text">
+              <h4>Reconhecimento do MEC</h4>
+              <p>Nossos cursos seguem rigorosamente os padrões de excelência exigidos pelo Ministério da Educação.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🎓</div>
+            <div class="feature-text">
+              <h4>Metodologia de Elite</h4>
+              <p>Formação completa e atualizada com tecnologia de ponta e padrões internacionais.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🚀</div>
+            <div class="feature-text">
+              <h4>Foco no Mercado</h4>
+              <p>Preparamos você para os desafios reais e para se destacar em sua carreira moderna.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🛡️</div>
+            <div class="feature-text">
+              <h4>Atualização Vitalícia</h4>
+              <p>Cursos em sintonia constante com as mais recentes regulamentações do setor e da ANAC.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 3rem;">
+          <a href="#" class="btn-hero-secondary" style="padding: 1rem 2rem; font-size: 1rem; border-radius: 8px;">Falar com um Consultor</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Stage 3: Cursos Disponíveis (Estilo Lito Academy) -->
   <section id="cursos" class="subjects-section" style="background: white; padding-top: 8rem; padding: 1rem">
     <h2 class="section-title" style="color: var(--navy-midnight);">Nossos Treinamentos</h2>
@@ -92,14 +147,44 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // Carousel de Cursos (Existente)
-      let currentSlide = 0;
+      // Carousel de Cursos (Infinito e Dinâmico)
       const inner = document.getElementById('carousel-inner');
       if (inner) {
-        setInterval(() => {
-          currentSlide = (currentSlide + 1) % 3;
-          inner.style.transform = `translateX(-${currentSlide * 33.333}%)`;
-        }, 5000);
+        const slides = Array.from(inner.children);
+        const totalOriginal = slides.length;
+        
+        // Clona todos os slides e adiciona ao final para criar o efeito de loop
+        slides.forEach(slide => {
+          const clone = slide.cloneNode(true);
+          inner.appendChild(clone);
+        });
+
+        let currentSlide = 0;
+        let isPaused = false;
+
+        // Pausa no hover
+        inner.parentElement.addEventListener('mouseenter', () => isPaused = true);
+        inner.parentElement.addEventListener('mouseleave', () => isPaused = false);
+
+        const moveCarousel = () => {
+          if (isPaused) return;
+
+          currentSlide++;
+          inner.style.transition = 'transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1)';
+          inner.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+          // Quando chegar no primeiro clone (que é igual ao primeiro original)
+          if (currentSlide === totalOriginal) {
+            // Espera a animação acabar e reseta instantaneamente
+            setTimeout(() => {
+              inner.style.transition = 'none';
+              currentSlide = 0;
+              inner.style.transform = `translateX(0)`;
+            }, 800); // Mesmo tempo da transition CSS
+          }
+        };
+
+        setInterval(moveCarousel, 5000);
       }
 
       // Hero Background Slider (Novo)

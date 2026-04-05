@@ -17,7 +17,7 @@
   /* CIA BRAND COLORS */
   --navy-midnight: #0a0e27;
   --navy-vibrant: #1a2b6d;
-  --aviation-gold: #FFD700;
+  --aviation-gold: #ffa722;
   --cobalt-blue: #0047AB;
   --royal-blue: #002366;
   
@@ -528,7 +528,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to right, rgba(10, 14, 39, 0.9) 25%, rgba(10, 14, 39, 0.3) 100%);
+  background: linear-gradient(to right, rgba(10, 14, 39, 0.6) 25%, rgba(10, 14, 39, 0.2) 100%);
   z-index: 2;
 }
 
@@ -556,6 +556,7 @@ body {
 
 .nav-links-sales {
   display: flex;
+  align-items: center;
   gap: 2.5rem;
 }
 
@@ -574,7 +575,7 @@ body {
 }
 
 .btn-area-aluno {
-  background: var(--navy-midnight);
+  background: linear-gradient(180deg, var(--cobalt-blue) 0%, var(--royal-blue) 100%);
   color: white;
   padding: 0.8rem 1.8rem;
   border-radius: 999px;
@@ -582,14 +583,15 @@ body {
   text-decoration: none;
   font-size: 0.85rem;
   margin-left: 3rem;
-  transition: all 0.3s;
-  border: 2px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 71, 171, 0.3);
 }
 
 .btn-area-aluno:hover {
-  background: white;
-  color: var(--navy-midnight);
-  border-color: var(--navy-midnight);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 71, 171, 0.4);
+  filter: brightness(1.1);
 }
 
 /* ... (hero content and titles stay the same) ... */
@@ -605,13 +607,12 @@ body {
 
 .carousel-inner {
   display: flex;
-  width: 300%; /* 3 slides */
   height: 100%;
   transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 .slide-sales {
-  width: 33.333%;
+  flex: 0 0 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -798,6 +799,100 @@ body {
 .rules-section {
   padding: 8rem 5%;
   background: radial-gradient(circle at top, #111827 0%, var(--navy-midnight) 100%);
+}
+
+/* Stage 2.5: About Sales Section (Authority) */
+.about-sales-section {
+  padding: 10rem 10%;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.about-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8rem;
+  align-items: center;
+}
+
+.about-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--aviation-gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+.about-main-title {
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: var(--navy-midnight);
+  line-height: 1.1;
+  margin-bottom: 2.5rem;
+}
+
+.about-description {
+  font-size: 1.1rem;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 3.5rem;
+}
+
+.about-features {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.feature-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.feature-icon {
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+
+.feature-text h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--navy-midnight);
+  margin-bottom: 0.5rem;
+}
+
+.feature-text p {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+  .about-container {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+  
+  .about-sales-section {
+    padding: 6rem 5%;
+  }
+
+  .about-main-title {
+    font-size: 2.5rem;
+  }
 }
 
 .rules-container {
