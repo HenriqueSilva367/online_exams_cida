@@ -1,0 +1,40 @@
+<div class="dashboard-header">
+  <div>
+    <h1 class="page-title">Editar Alternativa</h1>
+    <p class="page-subtitle">Questão: <%= @answer.question.title.truncate(100) %></p>
+  </div>
+  <div class="header-actions">
+    <%= link_to '← Voltar para Questão', admin_question_path(@answer.question), class: "btn-outline" %>
+  </div>
+</div>
+
+<div class="auth-card" style="max-width: 600px; margin: 2rem auto;">
+  <%= form_with(model: [:admin, @answer], class: "auth-form") do |form| %>
+    <% if @answer.errors.any? %>
+      <div class="flash flash-alert">
+        <strong>Ops! Existem alguns erros:</strong>
+        <ul style="margin: 0.5rem 0 0 1rem; font-size: 0.85rem;">
+          <% @answer.errors.full_messages.each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :title, "Texto da Alternativa", class: "form-label" %>
+      <div class="input-wrapper">
+        <%= form.text_field :title, class: "form-input", placeholder: "Ex: 25 bananas", required: true %>
+      </div>
+    </div>
+
+    <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem; margin-bottom: 2rem;">
+      <%= form.check_box :is_correct, style: "width: 1.2rem; height: 1.2rem; cursor: pointer;" %>
+      <%= form.label :is_correct, "Esta é a Resposta Correta (Gabarito)", class: "form-label", style: "margin: 0; cursor: pointer;" %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Atualizar Alternativa", class: "btn-primary btn-block" %>
+    </div>
+  <% end %>
+</div>

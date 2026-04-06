@@ -34,13 +34,19 @@ class ExamSessionsController < ApplicationController
       started_at: Time.current
     )
 
-    # If it's a topic-based simulation, pre-fill random questions to "lock" the set
+    # Pre-fill questions for the session
     if @exam_session.selected_topic_id
+      # If it's a topic-based simulation, pre-fill random questions to "lock" the set
       random_questions = Question.where(topic_id: @exam_session.selected_topic_id)
                                  .order("RANDOM()")
                                  .limit(20)
       
       random_questions.each do |q|
+        @exam_session.session_answers.create!(question: q)
+      end
+    else
+      # Standard full exam - load all questions into the session
+      @exam.questions.each do |q|
         @exam_session.session_answers.create!(question: q)
       end
     end
@@ -94,7 +100,7 @@ class ExamSessionsController < ApplicationController
       end
     end
     
-    @incorrect_answers = @answered_questions - @correct_answers
+    @incorrect_answers = @total_questions - @correct_answers
     @accuracy = @total_questions > 0 ? (@correct_answers.to_f / @total_questions * 100).round(2) : 0
   end
 

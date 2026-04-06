@@ -1,6 +1,6 @@
 class Admin::AnswersController < Admin::BaseController
   before_action :set_question, only: [:create]
-  before_action :set_answer, only: [:destroy]
+  before_action :set_answer, only: [:edit, :update, :destroy]
 
   # POST /admin/questions/:question_id/answers
   def create
@@ -10,6 +10,18 @@ class Admin::AnswersController < Admin::BaseController
       redirect_to admin_question_path(@question), notice: 'Alternativa adicionada com sucesso!'
     else
       redirect_to admin_question_path(@question), alert: "Falha ao salvar alternativa: #{@answer.errors.full_messages.to_sentence}"
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    @question = @answer.question
+    if @answer.update(answer_params)
+      redirect_to admin_question_path(@question), notice: 'Alternativa atualizada com sucesso!'
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 

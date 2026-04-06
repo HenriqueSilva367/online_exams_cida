@@ -34,7 +34,13 @@
               <span style="font-weight: 500;"><%= ans.title %></span>
             </div>
             
-            <%= button_to 'Excluir', admin_answer_path(ans), method: :delete, class: "btn-outline", style: "border: none; color: #ef4444; padding: 0.2rem 0.5rem; border-radius: 0.3rem;", form: { data: { turbo_confirm: "Gabarito: essa alternativa sumirá. Tem certeza?" } } %>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <%= link_to '✏️ Editar', edit_admin_answer_path(ans), class: "btn-outline", style: "font-size: 0.8rem; padding: 0.3rem 0.6rem; text-decoration: none;" %>
+              <%= button_to '🗑️ Excluir', admin_answer_path(ans), method: :delete, 
+                  class: "btn-danger", 
+                  style: "font-size: 0.8rem; padding: 0.3rem 0.6rem;",
+                  form: { style: "display: inline-block; margin: 0;", data: { turbo_confirm: "Gabarito: essa alternativa sumirá. Tem certeza?" } } %>
+            </div>
           </li>
         <% end %>
       </ul>

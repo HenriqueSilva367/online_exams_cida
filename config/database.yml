@@ -84,7 +84,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    url: <%= ENV["DATABASE_URL"] %>
+    url: <%= ENV["DATABASE_URL"] || "" %>
   # Reutiliza a mesma configuração para cache, queue e cable no Render
   cache:
     <<: *primary_production
