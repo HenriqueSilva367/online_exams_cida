@@ -141,8 +141,22 @@
             </li>
           <% end %>
         </ul>
+
+        <% if q.explanation.present? %>
+          <div class="explanation-container" style="margin-top: 1.5rem; padding: 1.5rem; background: #fff; border: 1px solid <%= card_border %>; border-radius: 0.8rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+              <span style="font-size: 1.2rem;">🔍</span>
+              <div>
+                <strong style="display: block; margin-bottom: 0.5rem; color: #92400e; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;">Referência Técnica / Base Legal:</strong>
+                <div style="font-size: 0.95rem; color: #4b5563; line-height: 1.6;">
+                  <%= render_explanation_with_images(q) %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
       </div>
-    <% end %>
+<% end %>
   </div>
 
   <div style="text-align: center; margin-top: 4rem;">

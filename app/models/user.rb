@@ -1,13 +1,22 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable,
          :recoverable, :rememberable, :validatable
 
-  enum :role, { admin: 0, student: 1 }
+  enum :role, { admin: 0, student: 1, professor: 2, supervisor: 3 }
+  enum :student_type, { pilot: 0, flight_attendant: 1 }
 
   has_many :exam_sessions, dependent: :destroy
+  has_many :external_activities, dependent: :destroy
+  has_many :exercise_authorizations, dependent: :destroy
   has_one_attached :avatar
 
-  validates :name, presence: true
+  validates :full_name, presence: true
+  alias_attribute :name, :full_name
+
+  def total_points
+    # Soma de atividades extras + (futura integração com simulados)
+    external_activities.sum(:score)
+  end
 end

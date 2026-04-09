@@ -25,30 +25,36 @@
   <aside class="exam-status-sidebar">
     <!-- Cronômetro Digital Style LED -->
     <div class="status-card digital-clock-container">
-      <div class="clock-label" style="color: white; font-size: 0.8rem; margin-bottom: 0.5rem;">Tempo Restante</div>
-      <div class="led-timer" data-exam-session-v2-target="timerDisplay">00:00:00</div>
+      <div class="clock-label" style="color: white; font-size: 0.8rem; margin-bottom: 0.5rem;">
+        <%= @exam_session.effective_duration.present? ? "Tempo Restante" : "Modo Exercício" %>
+      </div>
+      <div class="led-timer" data-exam-session-v2-target="timerDisplay">
+        <%= @exam_session.effective_duration.present? ? "00:00:00" : "TEMPO LIVRE" %>
+      </div>
     </div>
 
     <!-- Progresso por Matérias -->
-    <div class="status-card">
-      <h4 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--text-main); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Andamento por Matéria</h4>
-      
-      <%# Agrupa questões por tópico para gerar as barras %>
-      <% subjects = @questions.group_by { |q| q.topic_id || 0 } %>
-      <% subjects.each do |topic_id, qs| %>
-        <% topic_name = qs.first.topic&.title || "Geral" %>
-        <div class="subject-progress-item">
-          <div class="subject-label" style="font-size: 0.85rem; margin-bottom: 0.3rem;">
-            <span><%= topic_name %></span>
+    <% if @exam_session.effective_duration.present? %>
+      <div class="status-card">
+        <h4 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--text-main); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Andamento por Matéria</h4>
+        
+        <%# Agrupa questões por tópico para gerar as barras %>
+        <% subjects = @questions.group_by { |q| q.topic_id || 0 } %>
+        <% subjects.each do |topic_id, qs| %>
+          <% topic_name = qs.first.topic&.title || "Geral" %>
+          <div class="subject-progress-item">
+            <div class="subject-label" style="font-size: 0.85rem; margin-bottom: 0.3rem;">
+              <span><%= topic_name %></span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" 
+                   data-exam-session-v2-target="subjectProgress" 
+                   data-subject-id="<%= topic_id %>"></div>
+            </div>
           </div>
-          <div class="progress-track">
-            <div class="progress-fill" 
-                 data-exam-session-v2-target="subjectProgress" 
-                 data-subject-id="<%= topic_id %>"></div>
-          </div>
-        </div>
-      <% end %>
-    </div>
+        <% end %>
+      </div>
+    <% end %>
 
     <!-- Botão de Finalização Rápida -->
     <button type="button" onclick="document.getElementById('modal-submit-exam').showModal()" class="btn-primary" style="width: 100%; padding: 1rem; background: #10b981; border: none; cursor: pointer; border-radius: 0.5rem; color: white; font-weight: bold;">
@@ -122,20 +128,6 @@
               </label>
             <% end %>
           </div>
-
-          <% if q.explanation.present? %>
-            <div class="explanation-container" style="margin-top: 1.5rem;">
-              <details class="explanation-details">
-                <summary class="explanation-summary">
-                  <span class="icon">🔍</span> Ver Base Legal / Comentário Professor
-                </summary>
-                <div class="explanation-content" style="margin-top: 1rem; padding: 1.2rem; background: #fffcf0; border-left: 4px solid #f59e0b; border-radius: 0.4rem; font-size: 0.9rem; color: #78350f; line-height: 1.6;">
-                  <strong style="display: block; margin-bottom: 0.5rem; color: #92400e;">Referência Técnica:</strong>
-                  <%= render_explanation_with_images(q) %>
-                </div>
-              </details>
-            </div>
-          <% end %>
         </div>
       <% end %>
 

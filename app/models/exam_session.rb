@@ -8,13 +8,15 @@ class ExamSession < ApplicationRecord
   enum :result_status, { pending: 0, approved: 1, failed: 2, second_chance: 3 }
 
   def effective_duration
-    return exam.time_duration unless selected_topic.present?
+    # Se houver um tópico selecionado, é um exercício (tempo livre)
+    return nil if selected_topic_id.present?
     
-    # Calculate how many subjects (topics) this exam covers in total
-    total_subjects = exam.questions.pluck(:topic_id).uniq.compact.count
-    total_subjects = 5 if total_subjects.zero? # Default for ANAC if no topics assigned yet
-    
-    (exam.time_duration.to_f / total_subjects).ceil
+    # Se for simulado completo (ANAC)
+    if user.pilot?
+      120 # 2 horas para Piloto
+    else
+      180 # 3 horas para Comissário (conforme instrução)
+    end
   end
 
   def calculate_anac_result!

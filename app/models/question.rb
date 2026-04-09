@@ -8,7 +8,7 @@ class Question < ApplicationRecord
   
   before_destroy :check_if_has_answers
 
-  validates :title, presence: true
+  validates :title, presence: true, uniqueness: { case_sensitive: false, message: "Este enunciado já foi cadastrado em outra questão." }
 
   private
 

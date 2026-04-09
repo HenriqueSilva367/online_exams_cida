@@ -142,7 +142,7 @@ pt-BR:
       empty: "Nenhum item cadastrado."
     topics:
       index:
-        title: "Trilhas & Tópicos"
+        title: "Trilhas e Tópicos"
         subtitle: "Gerencie os temas das provas e disciplinas"
         new_topic: "Novo Tópico"
     users:

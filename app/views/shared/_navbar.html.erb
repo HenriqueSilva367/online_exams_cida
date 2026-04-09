@@ -7,21 +7,46 @@
     </div>
     
     <div class="navbar-links">
-      <% if current_user.admin? %>
-        <%= link_to t('common.navbar.dashboard'), admin_root_path, class: "nav-link" %>
-        <%= link_to t('common.navbar.topics'), admin_topics_path, class: "nav-link" %>
-        <%= link_to t('common.navbar.students'), admin_users_path, class: "nav-link" %>
-        <%= link_to t('common.navbar.reports'), admin_exam_sessions_path, class: "nav-link" %>
+      <% if current_user.admin? || current_user.professor? || current_user.supervisor? %>
+        <%= link_to "Dashboard", admin_root_path, class: "nav-link" %>
+        <%= link_to "Matérias", admin_topics_path, class: "nav-link" %>
+        <%= link_to "Usuários", admin_users_path, class: "nav-link" %>
+        <%= link_to "Relatórios", admin_exam_sessions_path, class: "nav-link" %>
       <% else %>
-        <%= link_to t('common.navbar.topics'), topics_path, class: "nav-link" %>
-        <%= link_to t('common.navbar.my_exams'), exam_sessions_path, class: "nav-link" %>
+        <%= link_to "Matérias", topics_path, class: "nav-link" %>
+        <%= link_to "Minhas Provas", exam_sessions_path, class: "nav-link" %>
+        <div class="nav-stats" style="display: flex; gap: 1rem; margin-left: 1rem; padding-left: 1rem; border-left: 1px solid rgba(255,255,255,0.2);">
+          <span class="nav-stat" title="Créditos de Simulado" style="background: #1e40af; color: white; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: bold;">
+            Credits: <%= current_user.credits %>
+          </span>
+          <span class="nav-stat" title="Clube de Pontos" style="background: #10b981; color: white; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: bold;">
+            Points: <%= current_user.total_points %>
+          </span>
+        </div>
       <% end %>
     </div>
     
-    <div class="navbar-user">
-      <span class="user-greeting"><%= t('common.navbar.hello', name: current_user.name&.split&.first || current_user.email.split('@').first) %> (<%= current_user.admin? ? t('common.navbar.admin') : t('common.navbar.student') %>)</span>
+    <div class="navbar-user" style="display: flex; align-items: center; gap: 1rem;">
+      <div style="text-align: right;">
+        <div class="user-greeting" style="font-weight: bold; font-size: 0.9rem;">
+          <%= current_user.full_name&.split&.first || "Usuário" %>
+        </div>
+        <div style="font-size: 0.7rem; opacity: 0.8; text-transform: uppercase;">
+          <%= current_user.role.humanize %>
+        </div>
+      </div>
       
-      <%= button_to t('common.navbar.logout'), destroy_user_session_path, method: :delete, class: "btn-logout" %>
+      <%= link_to edit_profile_path, class: "nav-profile-link", title: "Meu Perfil" do %>
+        <div style="width: 35px; height: 35px; border-radius: 50%; background: #e2e8f0; overflow: hidden; border: 2px solid white;">
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+          <% else %>
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #64748b; font-size: 1.2rem;">👤</div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= button_to "Sair", destroy_user_session_path, method: :delete, class: "btn-logout", style: "background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 0.3rem 0.8rem; border-radius: 0.4rem; cursor: pointer; font-size: 0.8rem;" %>
     </div>
   </div>
 </nav>

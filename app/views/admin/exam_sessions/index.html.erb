@@ -18,7 +18,7 @@
     <tbody>
       <% @users_with_exams.each do |st| %>
         <tr style="border-bottom: 1px solid var(--border-color);">
-          <td style="padding: 1rem; font-weight: 600; font-size: 1.1rem;"><%= st.name || "Sem Nome" %></td>
+          <td style="padding: 1rem; font-weight: 600; font-size: 1.1rem;"><%= st.full_name.presence || "Sem Nome" %></td>
           
           <td style="padding: 1rem; color: var(--text-muted);">
             <%= st.email %>

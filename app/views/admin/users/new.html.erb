@@ -1,0 +1,13 @@
+<div class="dashboard-header">
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <div>
+      <h1 class="page-title">Novo Aluno / Usuário</h1>
+      <p class="page-subtitle">Cadastre manualmente um novo aluno ou membro da equipe (Professor/Supervisor).</p>
+    </div>
+    <%= link_to "Voltar para Lista", admin_users_path, class: "btn-outline" %>
+  </div>
+</div>
+
+<div style="max-width: 800px; margin: 0 auto; background: white; padding: 2.5rem; border-radius: 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);">
+  <%= render "form", user: @user %>
+</div>

@@ -1,8 +1,29 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
     @users = User.order(created_at: :desc)
+  end
+
+  def show
+    @topics = Topic.all
+    @authorizations = @user.exercise_authorizations.index_by(&:topic_id)
+    @external_activities = @user.external_activities.order(date: :desc)
+  end
+
+  def new
+    @user = User.new
+  end
+
+  def create
+    @user = User.new(user_params)
+    @user.must_change_password = true # Força a troca no primeiro acesso
+    
+    if @user.save
+      redirect_to admin_users_path, notice: 'Usuário (Aluno) criado com sucesso! Ele deverá trocar a senha no primeiro acesso.'
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -37,6 +58,6 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :role)
+    params.require(:user).permit(:full_name, :email, :password, :password_confirmation, :role, :student_type, :credits, :cpf, :canac, :phone, :must_change_password)
   end
 end

@@ -286,30 +286,89 @@ body {
 }
 
 .flash-messages {
-  max-width: 1200px;
-  margin: 1rem auto 0;
-  padding: 0 5%;
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 400px;
+  pointer-events: none;
 }
 
 .flash {
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
+  pointer-events: auto;
+  position: relative;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: slide-in-toast 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .flash-notice {
-  background-color: #ecfdf5;
-  color: #065f46;
-  border: 1px solid #10b981;
+  background-color: rgba(236, 253, 245, 0.9);
+  color: #064e3b;
+  border-left: 4px solid #10b981;
 }
 
 .flash-alert {
-  background-color: #fef2f2;
-  color: #991b1b;
-  border: 1px solid #ef4444;
+  background-color: rgba(254, 242, 242, 0.9);
+  color: #7f1d1d;
+  border-left: 4px solid #ef4444;
+}
+
+.flash-close {
+  background: transparent;
+  border: none;
+  color: currentColor;
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.flash-close:hover {
+  opacity: 1;
+}
+
+@keyframes slide-in-toast {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-out.slide-out-to-right {
+  animation: slide-out-toast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slide-out-toast {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
 
 /* =========================================

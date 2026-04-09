@@ -1,11 +1,11 @@
-  <div>
-    <h1 class="page-title"><%= t('admin.topics.index.title') %></h1>
-    <p class="page-subtitle"><%= t('admin.topics.index.subtitle') %></p>
+<div class="dashboard-header">
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <div>
+      <h1 class="page-title"><%= t('admin.topics.index.title') %></h1>
+      <p class="page-subtitle"><%= t('admin.topics.index.subtitle') %></p>
+    </div>
+    <%= link_to t('admin.topics.index.new_topic'), new_admin_topic_path, class: "btn-primary", style: "background-color: var(--primary); padding: 0.8rem 1.5rem; width: 20%; text-align: center;" %>
   </div>
-</div>
-
-<div class="flex mb-6">
-  <%= link_to t('admin.topics.index.new_topic'), new_admin_topic_path, class: "btn-primary mb-10", style: "text-decoration: none; display: inline-block; margin-bottom: 25px;" %>
 </div>
 
 <div class="topics-grid">

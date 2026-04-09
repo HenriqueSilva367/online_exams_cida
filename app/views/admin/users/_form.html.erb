@@ -10,45 +10,88 @@
     </div>
   <% end %>
 
-  <div class="form-group">
-    <%= form.label :name, "Nome Completo", class: "form-label" %>
-    <div class="input-wrapper">
-      <%= form.text_field :name, class: "form-input", placeholder: "Ex: Maria Silva" %>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <div class="form-group" style="grid-column: span 2;">
+      <%= form.label :full_name, "Nome Completo", class: "form-label" %>
+      <div class="input-wrapper">
+        <%= form.text_field :full_name, class: "form-input", placeholder: "Ex: Maria Silva" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :email, "Endereço de E-mail", class: "form-label" %>
+      <div class="input-wrapper">
+        <%= form.email_field :email, class: "form-input", placeholder: "maria@example.com" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :phone, "Telefone / WhatsApp", class: "form-label" %>
+      <div class="input-wrapper">
+        <%= form.text_field :phone, class: "form-input", placeholder: "(00) 00000-0000" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :cpf, "CPF", class: "form-label" %>
+      <div class="input-wrapper">
+        <%= form.text_field :cpf, class: "form-input", placeholder: "000.000.000-00" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :canac, "Código CANAC", class: "form-label" %>
+      <div class="input-wrapper">
+        <%= form.text_field :canac, class: "form-input", placeholder: "000000" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :role, "Nível de Acesso (Cargo)", class: "form-label" %>
+      <div class="input-wrapper" style="position: relative;">
+        <%= form.select :role, User.roles.keys.map { |r| [r.humanize, r] }, {}, { class: "form-input", style: "appearance: none; cursor: pointer;" } %>
+        <div style="position: absolute; right: 1rem; top: 1rem; pointer-events: none; color: var(--text-muted);">▼</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :student_type, "Categoria (Curso)", class: "form-label" %>
+      <div class="input-wrapper" style="position: relative;">
+        <%= form.select :student_type, User.student_types.keys.map { |s| [s.humanize, s] }, { include_blank: "Selecione a categoria" }, { class: "form-input", style: "appearance: none; cursor: pointer;" } %>
+        <div style="position: absolute; right: 1rem; top: 1rem; pointer-events: none; color: var(--text-muted);">▼</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :credits, "Créditos de Simulado", class: "form-label" %>
+      <div class="input-wrapper">
+        <%= form.number_field :credits, class: "form-input", min: 0 %>
+      </div>
+    </div>
+
+    <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; padding-top: 1rem;">
+      <%= form.check_box :must_change_password %>
+      <%= form.label :must_change_password, "Forçar troca de senha no próximo acesso?", class: "form-label", style: "margin: 0; font-size: 0.85rem;" %>
     </div>
   </div>
 
-  <div class="form-group">
-    <%= form.label :email, "Endereço de E-mail", class: "form-label" %>
-    <div class="input-wrapper">
-      <%= form.email_field :email, class: "form-input", placeholder: "maria@example.com" %>
-    </div>
-  </div>
+  <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 2rem 0 1.5rem 0;">
 
   <div class="form-group">
-    <%= form.label :role, "Nível de Acesso (Cargo)", class: "form-label" %>
-    <div class="input-wrapper" style="position: relative;">
-      <%= form.select :role, User.roles.keys.map { |r| [r.humanize, r] }, {}, { class: "form-input", style: "appearance: none; cursor: pointer;" } %>
-      <div style="position: absolute; right: 1rem; top: 1rem; pointer-events: none; color: var(--text-muted);">▼</div>
-    </div>
-  </div>
-
-  <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 2.5rem 0 1.5rem 0;">
-
-  <div class="form-group">
-    <%= form.label :password, "Nova Senha (deixe em branco para manter a atual)", class: "form-label" %>
+    <%= form.label :password, "Senha (Obrigatório na criação / Deixe em branco se for editar)", class: "form-label" %>
     <div class="input-wrapper">
       <%= form.password_field :password, class: "form-input", placeholder: "••••••••" %>
     </div>
   </div>
 
   <div class="form-group">
-    <%= form.label :password_confirmation, "Confirme Nova Senha", class: "form-label" %>
+    <%= form.label :password_confirmation, "Confirme a Senha", class: "form-label" %>
     <div class="input-wrapper">
       <%= form.password_field :password_confirmation, class: "form-input", placeholder: "••••••••" %>
     </div>
   </div>
 
-  <div class="form-actions">
+  <div class="form-actions" style="margin-top: 2rem;">
     <%= form.submit "Salvar Usuário", class: "btn-primary btn-block" %>
   </div>
 <% end %>

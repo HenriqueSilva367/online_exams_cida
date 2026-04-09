@@ -9,7 +9,11 @@
       <a href="#quem-somos" class="nav-link-sales">Quem Somos</a>
       <a href="#" class="nav-link-sales">Agende uma Visita</a>
       <a href="#cursos" class="nav-link-sales">Cursos</a>
-      <%= link_to "Área do Aluno", new_user_session_path, class: "btn-area-aluno" %>
+      <% if user_signed_in? %>
+        <%= link_to "Acessar Simulados", authenticated_root_path, class: "btn-area-aluno" %>
+      <% else %>
+        <%= link_to "Área do Aluno", new_user_session_path, class: "btn-area-aluno" %>
+      <% end %>
     </div>
   </nav>
 
@@ -225,7 +229,11 @@
           <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.8rem;">
             <li><a href="#materias">Matérias</a></li>
             <li><a href="#regras">Regras</a></li>
-            <li><%= link_to "Login", new_user_session_path %></li>
+            <% if user_signed_in? %>
+              <li><%= link_to "Área do Aluno", authenticated_root_path %></li>
+            <% else %>
+              <li><%= link_to "Login", new_user_session_path %></li>
+            <% end %>
           </ul>
         </div>
       </div>

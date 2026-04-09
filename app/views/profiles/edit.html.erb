@@ -1,0 +1,340 @@
+<style>
+  :root {
+    --profile-primary: #0a0e27;
+    --profile-accent: #ffa722;
+    --profile-cobalt: #0047AB;
+    --profile-error: #ef4444;
+    --profile-success: #10b981;
+    --profile-bg: #f8fafc;
+    --profile-card-bg: #ffffff;
+    --profile-text: #1e293b;
+    --profile-text-muted: #64748b;
+  }
+
+  .profile-edit-body {
+    background-color: var(--profile-bg);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--profile-text);
+  }
+
+  .profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* Glassmorphism Card */
+  .profile-card {
+    background: var(--profile-card-bg);
+    border-radius: 24px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+  }
+
+  .profile-header {
+    background: linear-gradient(135deg, var(--profile-primary) 0%, var(--profile-cobalt) 100%);
+    padding: 2.5rem;
+    color: white;
+    position: relative;
+  }
+
+  .profile-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.025em;
+  }
+
+  .profile-header p {
+    margin-top: 0.5rem;
+    opacity: 0.85;
+    font-size: 1rem;
+  }
+
+  .security-alert {
+    background: rgba(255, 167, 34, 0.1);
+    border-left: 4px solid var(--profile-accent);
+    padding: 1.25rem;
+    margin: 1.5rem 2.5rem 0 2.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .security-alert-icon {
+    background: var(--profile-accent);
+    color: var(--profile-primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: bold;
+  }
+
+  .profile-form {
+    padding: 2.5rem;
+  }
+
+  .form-section {
+    margin-bottom: 3rem;
+  }
+
+  .form-section-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--profile-primary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .form-section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-field label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--profile-text-muted);
+  }
+
+  .form-input-styled {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #fcfdfe;
+    color: var(--profile-text);
+  }
+
+  .form-input-styled:focus {
+    outline: none;
+    border-color: var(--profile-cobalt);
+    box-shadow: 0 0 0 4px rgba(0, 71, 171, 0.1);
+    background: white;
+  }
+
+  .form-input-disabled {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+    border-color: #e2e8f0;
+  }
+
+  /* Success/Error States */
+  .errors-list {
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    color: var(--profile-error);
+    font-size: 0.875rem;
+  }
+
+  /* Photo Upload Tool */
+  .avatar-upload-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-cover: cover;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .btn-upload-trigger {
+    background: #f1f5f9;
+    color: var(--profile-text);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+  }
+
+  .btn-upload-trigger:hover {
+    background: #e2e8f0;
+  }
+
+  .profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .btn-submit {
+    background: var(--profile-cobalt);
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 14px rgba(0, 71, 171, 0.3);
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 71, 171, 0.4);
+    filter: brightness(1.1);
+  }
+
+  .btn-secondary {
+    padding: 0.875rem 2rem;
+    font-weight: 600;
+    color: var(--profile-text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .btn-secondary:hover {
+    color: var(--profile-text);
+  }
+
+  @media (max-width: 640px) {
+    .profile-header { padding: 1.5rem; }
+    .profile-form { padding: 1.5rem; }
+    .security-alert { margin: 1rem 1.5rem 0 1.5rem; }
+  }
+</style>
+
+<div class="profile-edit-body">
+  <div class="profile-container">
+    <div class="profile-card">
+      <header class="profile-header">
+        <h1>Configurações da Conta</h1>
+        <p>Mantenha seus dados atualizados e sinta-se seguro.</p>
+      </header>
+
+      <% if @user.must_change_password? %>
+        <div class="security-alert">
+          <div class="security-alert-icon">!</div>
+          <div class="security-alert-text">
+            <strong style="display: block; color: var(--profile-primary);">Troca Obrigatória de Senha</strong>
+            <span style="font-size: 0.875rem; color: #78350f;">Para garantir a segurança do seu primeiro acesso, é necessário cadastrar uma nova senha pessoal.</span>
+          </div>
+        </div>
+      <% end %>
+
+      <%= form_with(model: @user, url: profile_path, method: :patch, local: true, class: "profile-form") do |f| %>
+        <% if @user.errors.any? %>
+          <div class="errors-list">
+            <strong>Ops! Encontramos alguns problemas:</strong>
+            <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+              <% @user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- SECTION: IDENTIDADE -->
+        <div class="form-section">
+          <div class="form-section-title">SUA IDENTIDADE</div>
+          
+          <div class="avatar-upload-container">
+            <div class="relative">
+              <% if @user.avatar.attached? %>
+                <%= image_tag @user.avatar, class: "avatar-preview" %>
+              <% else %>
+                <div class="avatar-preview" style="background: #e2e8f0; display: flex; align-items:center; justify-content:center; color: #94a3b8;">
+                  <svg width="40" height="40" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </div>
+              <% end %>
+            </div>
+            
+            <div>
+              <label for="user_avatar" class="btn-upload-trigger">Alterar Foto</label>
+              <%= f.file_field :avatar, class: "hidden", id: "user_avatar", onchange: "document.getElementById('avatar-submit-btn').click();" %>
+              <p style="font-size: 0.75rem; color: var(--profile-text-muted); margin-top: 0.5rem;">JPG ou PNG, máx 2MB.</p>
+              <%= f.submit "Salvar Foto", id: "avatar-submit-btn", class: "hidden" %>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field">
+              <%= f.label :full_name, "Nome Completo" %>
+              <%= f.text_field :full_name, class: "form-input-styled", placeholder: "Seu nome completo" %>
+            </div>
+            <div class="form-field">
+              <%= f.label :email, "E-mail de Contato" %>
+              <%= f.email_field :email, class: "form-input-styled", placeholder: "seu@email.com" %>
+            </div>
+            <div class="form-field">
+              <%= f.label :phone, "Telefone / WhatsApp" %>
+              <%= f.text_field :phone, class: "form-input-styled", placeholder: "(00) 00000-0000" %>
+            </div>
+            <div class="form-field">
+              <label>Categoria (Bloqueado)</label>
+              <div class="form-input-styled form-input-disabled">
+                <%= @user.student_type&.humanize || "Não definido" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: SEGURANÇA -->
+        <div class="form-section">
+          <div class="form-section-title">SEGURANÇA DA CONTA</div>
+          
+          <div class="form-grid">
+            <div class="form-field">
+              <%= f.label :password, "Nova Senha" %>
+              <%= f.password_field :password, class: "form-input-styled", placeholder: "••••••••", autocomplete: "new-password" %>
+              <p style="font-size: 0.75rem; color: var(--profile-text-muted);">Deixe em branco se não quiser alterar.</p>
+            </div>
+            <div class="form-field">
+              <%= f.label :password_confirmation, "Confirmar Nova Senha" %>
+              <%= f.password_field :password_confirmation, class: "form-input-styled", placeholder: "••••••••", autocomplete: "new-password" %>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <% unless @user.must_change_password? %>
+            <%= link_to "Cancelar", profile_path, class: "btn-secondary" %>
+          <% end %>
+          <%= f.submit "Salvar Alterações", class: "btn-submit" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

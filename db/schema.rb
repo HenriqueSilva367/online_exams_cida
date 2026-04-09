@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_05_194901) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_08_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -72,12 +72,33 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_05_194901) do
     t.bigint "topic_id", null: false
     t.string "title"
     t.text "description"
-    t.string "difficulty"
-    t.integer "time_duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "exam_type", default: 0
+    t.integer "time_duration"
+    t.string "difficulty"
     t.index ["topic_id"], name: "index_exams_on_topic_id"
+  end
+
+  create_table "exercise_authorizations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "topic_id", null: false
+    t.boolean "authorized"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_exercise_authorizations_on_topic_id"
+    t.index ["user_id"], name: "index_exercise_authorizations_on_user_id"
+  end
+
+  create_table "external_activities", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "score"
+    t.bigint "user_id", null: false
+    t.date "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_external_activities_on_user_id"
   end
 
   create_table "questions", force: :cascade do |t|
@@ -94,7 +115,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_05_194901) do
   create_table "session_answers", force: :cascade do |t|
     t.bigint "exam_session_id", null: false
     t.bigint "question_id", null: false
-    t.bigint "answer_id", null: false
+    t.bigint "answer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["answer_id"], name: "index_session_answers_on_answer_id"
@@ -118,9 +139,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_05_194901) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role", default: 1
-    t.string "name"
+    t.string "full_name"
+    t.string "canac"
+    t.string "cpf"
+    t.string "phone"
+    t.integer "student_type", default: 0
+    t.integer "credits", default: 0
+    t.boolean "must_change_password", default: true
+    t.index ["canac"], name: "index_users_on_canac", unique: true
+    t.index ["cpf"], name: "index_users_on_cpf", unique: true
+    t.index ["credits"], name: "index_users_on_credits"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["must_change_password"], name: "index_users_on_must_change_password"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["student_type"], name: "index_users_on_student_type"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -130,6 +162,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_05_194901) do
   add_foreign_key "exam_sessions", "topics", column: "selected_topic_id"
   add_foreign_key "exam_sessions", "users"
   add_foreign_key "exams", "topics"
+  add_foreign_key "exercise_authorizations", "topics"
+  add_foreign_key "exercise_authorizations", "users"
+  add_foreign_key "external_activities", "users"
   add_foreign_key "questions", "exams"
   add_foreign_key "questions", "topics"
   add_foreign_key "session_answers", "answers"

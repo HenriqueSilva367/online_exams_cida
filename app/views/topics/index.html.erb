@@ -38,7 +38,7 @@
                   </div>
                   
                   <p style="font-size: 0.85rem; color: #ef4444; background: #fef2f2; padding: 0.5rem; border-radius: 0.4rem; margin-bottom: 1.5rem;">
-                    ⏱ O tempo será ajustado para <strong><%= (primary_exam.time_duration / 5.0).ceil %> min</strong> se escolher apenas 1 matéria.
+                    ⏱ O tempo será ajustado para <strong><%= ((primary_exam.time_duration || 180) / 5.0).ceil %> min</strong> se escolher apenas 1 matéria.
                   </p>
 
                   <div style="display: flex; gap: 1rem; justify-content: flex-end;">

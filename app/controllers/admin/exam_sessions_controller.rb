@@ -4,7 +4,7 @@ class Admin::ExamSessionsController < Admin::BaseController
   # GET /admin/exam_sessions
   def index
     # We want to list all Students who have taken exams
-    @users_with_exams = User.joins(:exam_sessions).distinct.order(:name)
+    @users_with_exams = User.joins(:exam_sessions).distinct.order(:full_name)
   end
 
   # GET /admin/exam_sessions/:id

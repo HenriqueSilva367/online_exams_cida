@@ -27,28 +27,39 @@ class ExamSessionsController < ApplicationController
 
   def create
     @exam = Exam.find(params[:exam_id])
+    topic_id = params[:selected_topic_id]
+
+    if topic_id.present?
+      # É um Exercício de Matéria Única
+      unless current_user.admin? || current_user.exercise_authorizations.exists?(topic_id: topic_id)
+        return redirect_to topics_path, alert: 'Você ainda não tem autorização para realizar este exercício. Fale com seu Professor.'
+      end
+    else
+      # É um Simulado Completo
+      if current_user.student? && current_user.credits <= 0
+        return redirect_to topics_path, alert: 'Você não possui mais créditos de Simulados. Entre em contato com a administração.'
+      end
+      
+      # Desconta crédito para alunos em simulado completo
+      current_user.decrement!(:credits) if current_user.student?
+    end
+
     @exam_session = current_user.exam_sessions.create!(
       exam: @exam,
-      selected_topic_id: params[:selected_topic_id],
+      selected_topic_id: topic_id,
       status: :in_progress,
       started_at: Time.current
     )
 
     # Pre-fill questions for the session
     if @exam_session.selected_topic_id
-      # If it's a topic-based simulation, pre-fill random questions to "lock" the set
       random_questions = Question.where(topic_id: @exam_session.selected_topic_id)
                                  .order("RANDOM()")
                                  .limit(20)
       
-      random_questions.each do |q|
-        @exam_session.session_answers.create!(question: q)
-      end
+      random_questions.each { |q| @exam_session.session_answers.create!(question: q) }
     else
-      # Standard full exam - load all questions into the session
-      @exam.questions.each do |q|
-        @exam_session.session_answers.create!(question: q)
-      end
+      @exam.questions.each { |q| @exam_session.session_answers.create!(question: q) }
     end
 
     redirect_to @exam_session
@@ -116,7 +127,7 @@ class ExamSessionsController < ApplicationController
     end
     
     # Check if timer exceeded on server side
-    if @exam_session.started_at + @exam_session.exam.time_duration.minutes < Time.current
+    if @exam_session.started_at + (@exam_session.exam.time_duration || 180).minutes < Time.current
       finish_session(:uncompleted)
       redirect_to results_exam_session_path(@exam_session), alert: 'Time is up! Exam uncompleted.'
     end

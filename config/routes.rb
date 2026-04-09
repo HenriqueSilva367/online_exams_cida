@@ -1,22 +1,16 @@
 Rails.application.routes.draw do
-  get "home/index"
-  get "exam_sessions/index"
-  get "exam_sessions/show"
-  get "exams/index"
-  get "exams/show"
-  get "topics/index"
-  get "topics/show"
+  resource :profile, only: [:show, :edit, :update]
   devise_for :users
 
-  # Defines the root path route ("/")
-  devise_scope :user do
-    authenticated :user do
-      root 'topics#index', as: :authenticated_root
-    end
-    unauthenticated do
-      root 'home#index', as: :unauthenticated_root
-    end
+  authenticated :user do
+    root to: 'topics#index', as: :authenticated_root
   end
+
+  unauthenticated do
+    root to: 'home#index'
+  end
+
+  get 'dashboard', to: 'topics#index'
 
   resources :topics, only: [:index, :show] do
     resources :exams, only: [:index, :show]
@@ -35,6 +29,8 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resources :exercise_authorizations, only: [:create, :destroy]
+    resources :external_activities, only: [:create, :destroy]
     # Full CRUD for entities
     root "topics#index"
     resources :users

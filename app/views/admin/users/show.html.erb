@@ -1,0 +1,152 @@
+<div class="dashboard-header">
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <div>
+      <h1 class="page-title">Gestão Acadêmica: <%= @user.full_name %></h1>
+      <p class="page-subtitle">Controle de autorizações, créditos e pontuações do aluno.</p>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <%= link_to "Editar Dados", edit_admin_user_path(@user), class: "btn-outline" %>
+      <%= link_to "Voltar para Lista", admin_users_path, class: "btn-outline" %>
+    </div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 350px; gap: 2rem; align-items: start;">
+  <div style="display: flex; flex-direction: column; gap: 2rem;">
+    
+    <!-- Seção: Autorizações de Matéria Única (Exercícios) -->
+    <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--text-main); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem;">
+        Autorizações de Matéria Única (Exercícios)
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+        Selecione as matérias que o aluno está autorizado a realizar como exercício (tempo livre, sem custo de crédito).
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+        <% @topics.each do |topic| %>
+          <% auth = @authorizations[topic.id] %>
+          <div style="padding: 1rem; border-radius: 1rem; border: 2px solid <%= auth ? '#10b981' : '#e2e8f0' %>; background: <%= auth ? '#f0fdf4' : '#ffffff' %>; display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 600; color: <%= auth ? '#065f46' : '#1e293b' %>;">
+              <%= topic.title %>
+            </div>
+            <% if auth %>
+               <%= button_to "Revogar", admin_exercise_authorization_path(auth), method: :delete, class: "btn-danger", style: "padding: 0.3rem 0.8rem; font-size: 0.75rem;" %>
+            <% else %>
+               <%= button_to "Autorizar", admin_exercise_authorizations_path(user_id: @user.id, topic_id: topic.id), method: :post, class: "btn-primary", style: "padding: 0.3rem 0.8rem; font-size: 0.75rem; background: #10b981;" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Seção: Clube de Pontos (Atividades Extras) -->
+    <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.25rem; color: var(--text-main); margin: 0;">Clube de Pontos (Atividades Extras)</h2>
+        <button type="button" onclick="document.getElementById('modal-add-activity').showModal()" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">+ Adicionar Atividade</button>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border-color); text-align: left; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
+              <th style="padding: 1rem;">Data</th>
+              <th style="padding: 1rem;">Atividade</th>
+              <th style="padding: 1rem; text-align: center;">Pontuação</th>
+              <th style="padding: 1rem; text-align: right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @external_activities.each do |activity| %>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 1rem; font-size: 0.9rem;"><%= activity.date.strftime("%d/%m/%Y") %></td>
+                <td style="padding: 1rem;">
+                  <div style="font-weight: 600;"><%= activity.title %></div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);"><%= activity.description %></div>
+                </td>
+                <td style="padding: 1rem; text-align: center; font-weight: 800; color: #10b981;">+<%= activity.score %></td>
+                <td style="padding: 1rem; text-align: right;">
+                  <%= button_to "Excluir", admin_external_activity_path(activity), method: :delete, class: "btn-danger", style: "padding: 0.3rem 0.6rem; font-size: 0.75rem;" %>
+                </td>
+              </tr>
+            <% end %>
+            <% if @external_activities.empty? %>
+              <tr>
+                <td colspan="4" style="padding: 3rem; text-align: center; color: var(--text-muted);">Nenhuma atividade extra registrada ainda.</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <aside style="display: flex; flex-direction: column; gap: 2rem;">
+    <!-- Perfil Rápido -->
+    <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid var(--border-color); text-align: center;">
+      <div style="width: 120px; height: 120px; border-radius: 999px; background: #f1f5f9; margin: 0 auto 1.5rem auto; overflow: hidden; border: 4px solid white; shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+         <% if @user.avatar.attached? %>
+           <%= image_tag @user.avatar, style: "width: 100%; height: 100%; object-cover;" %>
+         <% else %>
+           <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 3rem;">👤</div>
+         <% end %>
+      </div>
+      <h3 style="margin: 0; font-size: 1.15rem;"><%= @user.full_name %></h3>
+      <p style="color: var(--text-muted); margin: 0.2rem 0;"><%= @user.email %></p>
+      <span style="display: inline-block; margin-top: 0.5rem; background: #bfdbfe; color: #1e40af; padding: 0.2rem 0.8rem; border-radius: 999px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;">
+        <%= @user.student_type&.humanize || "Indefinido" %>
+      </span>
+
+      <div style="margin-top: 2rem; display: grid; gap: 1rem; text-align: left; font-size: 0.9rem;">
+        <div><strong>CPF:</strong> <%= @user.cpf %></div>
+        <div><strong>CANAC:</strong> <%= @user.canac %></div>
+        <div><strong>WhatsApp:</strong> <%= @user.phone %></div>
+      </div>
+    </div>
+
+    <!-- Saldo de Créditos -->
+    <div style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); border-radius: 1.5rem; padding: 2rem; color: white; text-align: center; box-shadow: 0 10px 15px -3px rgba(30, 64, 175, 0.3);">
+      <h3 style="margin: 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">Créditos Disponíveis</h3>
+      <div style="font-size: 4rem; font-weight: 900; margin: 1rem 0;"><%= @user.credits %></div>
+      <p style="font-size: 0.8rem; opacity: 0.8;">Simulados ANAC Completos</p>
+    </div>
+  </aside>
+</div>
+
+<!-- Modal: Adicionar Atividade -->
+<dialog id="modal-add-activity" style="border: none; border-radius: 1.5rem; padding: 0; width: 500px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+  <div style="padding: 2.5rem;">
+    <h3 style="margin-top: 0; font-size: 1.5rem;">Adicionar Pontuação Extra</h3>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Registre uma atividade realizada fora dos simulados para o Clube de Pontos.</p>
+
+    <%= form_with(model: [:admin, ExternalActivity.new], local: true) do |f| %>
+      <%= f.hidden_field :user_id, value: @user.id %>
+      
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <%= f.label :title, "Título da Atividade", class: "form-label" %>
+        <%= f.text_field :title, class: "form-input", placeholder: "Ex: Participação em Workshop", required: true %>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <%= f.label :score, "Pontuação Ganhada", class: "form-label" %>
+        <%= f.number_field :score, class: "form-input", placeholder: "Ex: 20", required: true %>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <%= f.label :date, "Data da Realização", class: "form-label" %>
+        <%= f.date_field :date, class: "form-input", value: Date.today, required: true %>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 2rem;">
+        <%= f.label :description, "Observações (Opcional)", class: "form-label" %>
+        <%= f.text_area :description, class: "form-input", rows: 3, placeholder: "Detalhes adicionais..." %>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+        <button type="button" onclick="document.getElementById('modal-add-activity').close()" class="btn-outline">Cancelar</button>
+        <%= f.submit "Salvar Pontuação", class: "btn-primary", style: "background: #10b981; border: none;" %>
+      </div>
+    <% end %>
+  </div>
+</dialog>

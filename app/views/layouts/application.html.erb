@@ -23,15 +23,21 @@
   </head>
 
   <body>
-    <%= render "shared/navbar" if user_signed_in? %>
+    <%= render "shared/navbar" if user_signed_in? && controller_name != 'home' %>
     
-    <% if notice || alert %>
+    <% if notice.present? || alert.present? %>
       <div class="flash-messages">
-        <% if notice %>
-          <div class="flash flash-notice"><%= notice %></div>
+        <% if notice.present? %>
+          <div class="flash flash-notice" data-controller="flash">
+            <span><%= notice %></span>
+            <button type="button" class="flash-close" data-action="click->flash#close">&times;</button>
+          </div>
         <% end %>
-        <% if alert %>
-          <div class="flash flash-alert"><%= alert %></div>
+        <% if alert.present? %>
+          <div class="flash flash-alert" data-controller="flash">
+            <span><%= alert %></span>
+            <button type="button" class="flash-close" data-action="click->flash#close">&times;</button>
+          </div>
         <% end %>
       </div>
     <% end %>

@@ -1,7 +1,10 @@
 <div class="dashboard-header">
-  <div>
-    <h1 class="page-title">Gestão de Alunos (Usuários)</h1>
-    <p class="page-subtitle">Visualize ou altere os níveis de acesso de quem está cadastrado</p>
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <div>
+      <h1 class="page-title">Gestão de Alunos (Usuários)</h1>
+      <p class="page-subtitle">Visualize ou altere os níveis de acesso e créditos dos alunos.</p>
+    </div>
+    <%= link_to "Novo Usuário (Aluno)", new_admin_user_path, class: "btn-primary", style: "background-color: var(--primary); padding: 0.8rem 1.5rem; width: 20%; text-align: center;" %>
   </div>
 </div>
 
@@ -9,35 +12,49 @@
   <table style="width: 100%; border-collapse: collapse; text-align: left;">
     <thead>
       <tr style="border-bottom: 2px solid var(--border-color);">
-        <th style="padding: 1rem;">ID</th>
-        <th style="padding: 1rem;">Nome</th>
-        <th style="padding: 1rem;">E-mail</th>
+        <th style="padding: 1rem;">Nome / E-mail</th>
+        <th style="padding: 1rem;">CPF / CANAC</th>
+        <th style="padding: 1rem;">Categoria</th>
         <th style="padding: 1rem;">Cargo</th>
-        <th style="padding: 1rem;">Membro Desde</th>
+        <th style="padding: 1rem; text-align: center;">Créditos</th>
         <th style="padding: 1rem; text-align: right;">Ações</th>
       </tr>
     </thead>
     <tbody>
       <% @users.each do |user| %>
-        <tr style="border-bottom: 1px solid var(--border-color);">
-          <td style="padding: 1rem; color: var(--text-muted);"><%= user.id %></td>
-          <td style="padding: 1rem; font-weight: 600;"><%= user.name.presence || 'Sem nome cadastrado' %></td>
-          <td style="padding: 1rem; color: var(--text-muted);"><%= user.email %></td>
+        <tr style="border-bottom: 1px solid var(--border-color); hover: background-color: #f8fafc;">
           <td style="padding: 1rem;">
-            <% if user.admin? %>
-              <span style="background-color: #fef08a; color: #854d0e; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">Admin</span>
-            <% else %>
-              <span style="background-color: #bfdbfe; color: #1e40af; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">Estudante</span>
-            <% end %>
+            <div style="font-weight: 600; color: var(--text-main);"><%= user.full_name.presence || 'Sem nome' %></div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);"><%= user.email %></div>
           </td>
-          <td style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">
-             <%= user.created_at.strftime("%d/%m/%Y") %>
+          <td style="padding: 1rem; font-size: 0.85rem;">
+            <div><%= user.cpf.presence || '-' %></div>
+            <div style="color: var(--text-muted);">C: <%= user.canac.presence || '-' %></div>
           </td>
-          <td style="padding: 1rem; text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
-            <%= link_to 'Editar', edit_admin_user_path(user), class: "btn-outline" %>
-            <% unless user == current_user %>
-              <%= button_to 'Excluir', admin_user_path(user), method: :delete, form: { data: { turbo_confirm: 'Certeza que deseja deletar permanentemente este usuário?' } }, class: "btn-danger" %>
-            <% end %>
+          <td style="padding: 1rem; font-size: 0.85rem; font-weight: 500;">
+            <%= user.student_type&.humanize || '-' %>
+          </td>
+          <td style="padding: 1rem;">
+            <% role_style = case user.role
+               when 'admin' then "background-color: #fef08a; color: #854d0e;"
+               when 'professor' then "background-color: #dcfce7; color: #166534;"
+               when 'supervisor' then "background-color: #fef3c7; color: #92400e;"
+               else "background-color: #bfdbfe; color: #1e40af;"
+               end %>
+            <span style="<%= role_style %> padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
+              <%= user.role.humanize %>
+            </span>
+          </td>
+          <td style="padding: 1rem; text-align: center; font-weight: 800; color: var(--primary);">
+            <%= user.credits %>
+          </td>
+          <td style="padding: 1rem; text-align: right;">
+            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+              <%= link_to 'Editar', edit_admin_user_path(user), class: "btn-outline", style: "padding: 0.4rem 0.8rem; font-size: 0.8rem;" %>
+              <% unless user == current_user %>
+                <%= button_to 'Excluir', admin_user_path(user), method: :delete, form: { data: { turbo_confirm: 'Certeza?' } }, class: "btn-danger", style: "padding: 0.4rem 0.8rem; font-size: 0.8rem;" %>
+              <% end %>
+            </div>
           </td>
         </tr>
       <% end %>
@@ -45,7 +62,7 @@
   </table>
   
   <% if @users.empty? %>
-    <div class="empty-state" style="margin-top: 1rem; background: transparent; border: none;">
+    <div style="padding: 3rem; text-align: center; color: var(--text-muted);">
       <p>Nenhum usuário encontrado no sistema.</p>
     </div>
   <% end %>
