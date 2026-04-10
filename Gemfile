@@ -66,3 +66,5 @@ end
 
 gem "devise", "~> 5.0"
 gem "pundit", "~> 2.5"
+gem "paper_trail"
+gem "kaminari"

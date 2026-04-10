@@ -1,4 +1,6 @@
 class Question < ApplicationRecord
+  has_paper_trail
+
   belongs_to :exam
   belongs_to :topic, optional: true
   has_many :answers, dependent: :destroy

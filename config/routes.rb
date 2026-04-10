@@ -44,6 +44,7 @@ Rails.application.routes.draw do
       resources :answers, shallow: true
     end
     resources :exam_sessions, only: [:index, :show]
+    resources :audit_logs, only: [:index, :show]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

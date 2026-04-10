@@ -1,4 +1,6 @@
 class Exam < ApplicationRecord
+  has_paper_trail
+
   belongs_to :topic
   has_many :questions, dependent: :destroy
   has_many :exam_sessions

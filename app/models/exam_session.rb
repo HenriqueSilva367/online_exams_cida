@@ -1,4 +1,6 @@
 class ExamSession < ApplicationRecord
+  has_paper_trail
+
   belongs_to :user
   belongs_to :exam
   belongs_to :selected_topic, class_name: 'Topic', optional: true
