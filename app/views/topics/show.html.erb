@@ -15,8 +15,6 @@
     <thead>
       <tr style="border-bottom: 2px solid var(--border-color);">
         <th style="padding: 1rem;">Prova / Exame</th>
-        <th style="padding: 1rem;">Dificuldade</th>
-        <th style="padding: 1rem;">Duração</th>
         <th style="padding: 1rem; text-align: right;">Ação</th>
       </tr>
     </thead>
@@ -24,14 +22,6 @@
       <% @exams.each do |exam| %>
         <tr style="border-bottom: 1px solid var(--border-color);">
           <td style="padding: 1rem; font-weight: 600;"><%= exam.title || "Exame sem nome" %></td>
-          <td style="padding: 1rem;">
-            <span style="background-color: #f3f4f6; color: #4b5563; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">
-              <%= exam.difficulty || "Padrão" %>
-            </span>
-          </td>
-          <td style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">
-            <%= exam.time_duration || 0 %> minutos
-          </td>
           <td style="padding: 1rem; text-align: right;">
             <button type="button" onclick="document.getElementById('modal-exam-<%= exam.id %>').showModal()" class="btn-primary" style="padding: 0.4rem 1rem; font-size: 0.85rem; border: none; cursor: pointer;">
               Iniciar Prova
@@ -43,7 +33,7 @@
                 <h3 style="margin-top: 0; color: var(--text-main);">Atenção, Estudante!</h3>
                 <p style="color: var(--text-muted); line-height: 1.5;">Você está prestes a iniciar seu cronômetro para o exame <strong><%= exam.title %></strong>.</p>
                 <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; background: #fef2f2; border: 1px solid #fca5a5; padding: 0.8rem; border-radius: 0.5rem; color: #991b1b;">
-                  O tempo de <strong><%= exam.time_duration %> minutos</strong> começará a rodar assim que você aceitar, e <strong>não pode ser pausado</strong> mesmo se você fechar a aba!
+                  Ao iniciar como <strong>Simulado Completo</strong>, o cronômetro oficial começará a rodar e não poderá ser pausado! Modo exercício não possui tempo limite.
                 </p>
                 
                 <div style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem;">

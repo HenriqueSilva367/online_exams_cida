@@ -32,8 +32,11 @@ Rails.application.routes.draw do
     resources :exercise_authorizations, only: [:create, :destroy]
     resources :external_activities, only: [:create, :destroy]
     # Full CRUD for entities
-    root "topics#index"
-    resources :users
+    root "dashboards#show"
+    resource :dashboard, only: [:show]
+    resources :users do
+      patch :add_credits, on: :member
+    end
     resources :topics do
       resources :exams, shallow: true
     end

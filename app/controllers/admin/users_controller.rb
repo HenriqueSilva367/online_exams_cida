@@ -1,8 +1,13 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :add_credits]
 
   def index
     @users = User.order(created_at: :desc)
+    
+    if params[:q].present?
+      query = "%#{params[:q]}%"
+      @users = @users.where("full_name ILIKE ? OR cpf ILIKE ?", query, query)
+    end
   end
 
   def show
@@ -49,6 +54,13 @@ class Admin::UsersController < Admin::BaseController
       @user.destroy
       redirect_to admin_users_path, notice: 'Usuário excluído perfeitamente.'
     end
+  end
+
+  def add_credits
+    amount = params[:amount].to_i > 0 ? params[:amount].to_i : 5
+    @user.increment!(:credits, amount)
+    
+    redirect_to admin_users_path(q: params[:q]), notice: "Adicionados #{amount} créditos para #{@user.full_name}."
   end
 
   private

@@ -9,7 +9,7 @@ class Exam < ApplicationRecord
 
   enum :exam_type, { normal: 0, anac_pp: 1 }
 
-  validates :title, :time_duration, presence: true
+  validates :title, presence: true
 
   private
 

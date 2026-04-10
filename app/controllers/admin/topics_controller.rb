@@ -3,6 +3,10 @@ class Admin::TopicsController < Admin::BaseController
 
   def index
     @topics = Topic.all
+    if params[:q_questions].present?
+      @questions_found = Question.where("title ILIKE ?", "%#{params[:q_questions]}%")
+                                .limit(50)
+    end
   end
 
   def show

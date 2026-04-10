@@ -126,8 +126,8 @@ class ExamSessionsController < ApplicationController
       redirect_to results_exam_session_path(@exam_session), alert: 'This exam session is already finished.'
     end
     
-    # Check if timer exceeded on server side
-    if @exam_session.started_at + (@exam_session.exam.time_duration || 180).minutes < Time.current
+    duration = @exam_session.effective_duration
+    if duration && @exam_session.started_at + duration.minutes < Time.current
       finish_session(:uncompleted)
       redirect_to results_exam_session_path(@exam_session), alert: 'Time is up! Exam uncompleted.'
     end

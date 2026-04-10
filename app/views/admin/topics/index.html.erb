@@ -1,14 +1,61 @@
 <div class="dashboard-header">
   <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
     <div>
-      <h1 class="page-title"><%= t('admin.topics.index.title') %></h1>
-      <p class="page-subtitle"><%= t('admin.topics.index.subtitle') %></p>
+      <h1 class="page-title">Gestão de Matérias e Trilhas</h1>
+      <p class="page-subtitle">Crie e gerencie os tópicos de estudo e seus simulados.</p>
     </div>
-    <%= link_to t('admin.topics.index.new_topic'), new_admin_topic_path, class: "btn-primary", style: "background-color: var(--primary); padding: 0.8rem 1.5rem; width: 20%; text-align: center;" %>
+    <%= link_to "Nova Matéria / Tópico", new_admin_topic_path, class: "btn-primary", style: "background-color: var(--primary); padding: 0.8rem 1.5rem; width: 20%; text-align: center;" %>
   </div>
 </div>
 
-<div class="topics-grid">
+<div class="topic-details-card" style="margin-top: 1rem; background: #f8fafc; border-color: #e2e8f0; padding: 1.5rem; margin-bottom: 2rem;">
+  <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.1rem; margin-bottom: 1rem;">🔍 Busca Global de Questões (Banco de Dados)</h3>
+  <%= form_with url: admin_topics_path, method: :get, local: true, class: "search-form" do |f| %>
+    <div style="display: flex; gap: 0.5rem; align-items: stretch;">
+      <%= f.text_field :q_questions, value: params[:q_questions], placeholder: "Digite parte do enunciado para localizar em qualquer matéria...", class: "form-input", style: "flex: 1; border-color: #cbd5e1; max-width: 80%;" %>
+      <%= f.submit "Buscar Questão", class: "btn-primary", style: "padding: 0 1.5rem; width: auto; font-size: 0.9rem; background: var(--primary);" %>
+      <% if params[:q_questions].present? %>
+        <%= link_to "Limpar", admin_topics_path, class: "btn-outline", style: "padding: 0.75rem 1.5rem; text-decoration: none; display: flex; align-items: center; background: white;" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @questions_found.present? %>
+    <div style="margin-top: 1.5rem; background: white; border-radius: 0.5rem; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+      <div style="padding: 0.75rem 1rem; background: #f1f5f9; font-weight: 700; font-size: 0.85rem; border-bottom: 1px solid #e2e8f0; color: var(--text-main); display: flex; justify-content: space-between;">
+        <span>Resultados da Busca</span>
+        <span style="background: var(--primary); color: white; padding: 0.1rem 0.6rem; border-radius: 999px; font-size: 0.7rem;"><%= @questions_found.count %> encontrados</span>
+      </div>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tbody>
+          <% @questions_found.each do |q| %>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 1rem; font-size: 0.9rem; color: var(--text-main);">
+                <div style="margin-bottom: 0.3rem;">
+                  <span style="background: #f1f5f9; color: #475569; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.7rem; font-family: monospace; font-weight: bold;">ID #<%= q.id %></span>
+                  <strong><%= q.topic&.title || "Sem Matéria" %></strong>
+                </div>
+                <%= truncate(q.title, length: 180) %>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem;">
+                  Prova: <%= q.exam&.title || "Tópico Direto" %>
+                </div>
+              </td>
+              <td style="padding: 1rem; text-align: right; white-space: nowrap;">
+                <%= link_to 'Gerenciar e Editar', admin_question_path(q), class: "btn-outline", style: "font-size: 0.8rem; padding: 0.4rem 0.8rem; text-decoration: none;" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% elsif params[:q_questions].present? %>
+    <div style="margin-top: 1rem; padding: 1rem; background: #fff1f2; border: 1px solid #fecaca; border-radius: 0.5rem; color: #991b1b; font-size: 0.9rem;">
+      Nenhuma questão encontrada no banco de dados com o termo "<%= params[:q_questions] %>".
+    </div>
+  <% end %>
+</div>
+
+<div class="topics-grid" style="margin-top: 2rem;">
   <% @topics.each do |topic| %>
     <div class="topic-card">
       <div class="topic-card-body">

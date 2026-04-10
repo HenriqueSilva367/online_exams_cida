@@ -1,7 +1,6 @@
 <div class="dashboard-header">
   <div>
     <h1 class="page-title"><%= @exam.title %></h1>
-    <p class="page-subtitle">Dificuldade: <strong><%= @exam.difficulty %></strong> | Tempo: <strong><%= @exam.time_duration %> min</strong></p>
   </div>
   <div class="header-actions">
     <%= link_to '✏️ Alterar Regras', edit_admin_exam_path(@exam), class: "btn-outline", style: "text-decoration: none;" %>

@@ -14,6 +14,7 @@
   <p style="color: var(--text-muted); line-height: 1.6;"><%= @topic.description %></p>
 </div>
 
+
 <div class="topic-details-card" style="margin-top: 2rem;">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
     <h3 style="margin: 0; color: var(--text-main);">Provas / Exames Cadastrados</h3>
@@ -23,22 +24,16 @@
   <% if @topic.exams.any? %>
     <table style="width: 100%; border-collapse: collapse; text-align: left;">
       <thead>
-        <tr style="border-bottom: 2px solid var(--border-color);">
-          <th style="padding: 1rem;">Prova / Tema</th>
-          <th style="padding: 1rem;">Duração</th>
-          <th style="padding: 1rem;">Dificuldade</th>
-          <th style="padding: 1rem; text-align: right;">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @topic.exams.each do |exam| %>
-          <tr style="border-bottom: 1px solid var(--border-color);">
-            <td style="padding: 1rem; font-weight: 600;"><%= exam.title %></td>
-            <td style="padding: 1rem; color: var(--text-muted);"><%= exam.time_duration %> min</td>
-            <td style="padding: 1rem;">
-              <span style="background-color: #f3f4f6; color: #4b5563; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem;"><%= exam.difficulty.presence || "Padrão" %></span>
-            </td>
-            <td style="padding: 1rem; text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
+          <tr style="border-bottom: 2px solid var(--border-color);">
+            <th style="padding: 1rem;">Prova / Tema</th>
+            <th style="padding: 1rem; text-align: right;">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @topic.exams.each do |exam| %>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 1rem; font-weight: 600;"><%= exam.title %></td>
+              <td style="padding: 1rem; text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
               <%= link_to 'Gerenciar Perguntas', admin_exam_path(exam), class: "btn-outline" %>
               <%= link_to 'Editar Prova', edit_admin_exam_path(exam), class: "btn-outline" %>
               <%= button_to 'Excluir', admin_exam_path(exam), method: :delete, form: { data: { turbo_confirm: 'Isto apagará a prova e todas as notas dos alunos nela!' } }, class: "btn-danger" %>

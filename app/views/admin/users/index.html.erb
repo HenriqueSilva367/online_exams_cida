@@ -8,6 +8,19 @@
   </div>
 </div>
 
+<div class="topic-details-card" style="padding: 1.5rem; margin-bottom: 2rem;">
+  <%= form_with url: admin_users_path, method: :get, local: true, class: "search-form" do |f| %>
+    <%= f.label :q, "Buscar Aluno (Nome ou CPF)", class: "form-label", style: "display: block; margin-bottom: 0.5rem;" %>
+    <div style="display: flex; gap: 0.5rem; align-items: stretch;">
+      <%= f.text_field :q, value: params[:q], placeholder: "Digite o nome ou CPF...", class: "form-input", style: "flex: 1; max-width: 80%;" %>
+      <%= f.submit "Pesquisar", class: "btn-primary", style: "padding: 0 1.5rem; width: auto; font-size: 0.9rem;" %>
+      <% if params[:q].present? %>
+        <%= link_to "Limpar", admin_users_path, class: "btn-outline", style: "padding: 0.75rem 1.5rem; text-decoration: none; display: flex; align-items: center;" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
 <div class="topic-details-card" style="padding: 1rem; overflow-x: auto;">
   <table style="width: 100%; border-collapse: collapse; text-align: left;">
     <thead>
@@ -17,7 +30,8 @@
         <th style="padding: 1rem;">Categoria</th>
         <th style="padding: 1rem;">Cargo</th>
         <th style="padding: 1rem; text-align: center;">Créditos</th>
-        <th style="padding: 1rem; text-align: right;">Ações</th>
+        <th style="padding: 1rem; text-align: center;">Pontos</th>
+        <th style="padding: 1rem; text-align: center;">Ações</th>
       </tr>
     </thead>
     <tbody>
@@ -48,12 +62,25 @@
           <td style="padding: 1rem; text-align: center; font-weight: 800; color: var(--primary);">
             <%= user.credits %>
           </td>
-          <td style="padding: 1rem; text-align: right;">
-            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-              <%= link_to 'Editar', edit_admin_user_path(user), class: "btn-outline", style: "padding: 0.4rem 0.8rem; font-size: 0.8rem;" %>
-              <% unless user == current_user %>
-                <%= button_to 'Excluir', admin_user_path(user), method: :delete, form: { data: { turbo_confirm: 'Certeza?' } }, class: "btn-danger", style: "padding: 0.4rem 0.8rem; font-size: 0.8rem;" %>
+          <td style="padding: 1rem; text-align: center; font-weight: 800; color: #10b981;">
+            <%= user.total_points %>
+          </td>
+          <td style="padding: 1rem; text-align: center;">
+            <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: nowrap;">
+              <% if user.student? %>
+                <%= form_with url: add_credits_admin_user_path(user), method: :patch, local: true, style: "display: flex; flex-direction: row; gap: 4px; align-items: center; margin: 0; min-width: max-content;" do |f| %>
+                  <%= hidden_field_tag :q, params[:q] %>
+                  <%= f.number_field :amount, value: 5, min: 1, style: "width: 50px; padding: 0 4px; font-size: 0.85rem; text-align: center; height: 32px; border: 1px solid #cbd5e1; border-radius: 6px; background: white; box-sizing: border-box;" %>
+                  <%= f.submit "+ Crédito", class: "btn-credit-outline", style: "background: transparent; border: 1px solid #10b981; color: #10b981; padding: 0 10px; font-size: 0.8rem; height: 32px; border-radius: 6px; cursor: pointer; white-space: nowrap; font-weight: 500; transition: all 0.2s;" %>
+                <% end %>
               <% end %>
+              
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <%= link_to 'Editar', edit_admin_user_path(user), class: "btn-outline", style: "padding: 0 0.8rem; font-size: 0.8rem; height: 32px; display: flex; align-items: center; text-decoration: none; white-space: nowrap;" %>
+                <% unless user == current_user %>
+                  <%= button_to 'Excluir', admin_user_path(user), method: :delete, form: { data: { turbo_confirm: 'Certeza?' } }, class: "btn-danger", style: "padding: 0 0.8rem; font-size: 0.8rem; height: 32px; display: flex; align-items: center; justify-content: center; white-space: nowrap;" %>
+                <% end %>
+              </div>
             </div>
           </td>
         </tr>
