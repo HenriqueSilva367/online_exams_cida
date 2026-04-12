@@ -994,50 +994,73 @@ body {
 }
 
 /* Footer */
+/* Footer */
 .landing-footer {
-  padding: 6rem 5% 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 4rem 5% 2rem;
   background: var(--navy-midnight);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.footer-content {
+
+.footer-container {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 4rem;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 
-.footer-brand {
-  font-size: 1.5rem;
-  font-weight: 800;
+
+.footer-link-premium {
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.footer-link-premium::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--aviation-gold);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.footer-link-premium:hover {
   color: white;
 }
 
-.footer-links {
-  display: flex;
-  gap: 3rem;
-}
-
-.footer-links a {
-  color: #94a3b8;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.footer-links a:hover {
-  color: var(--aviation-gold);
+.footer-link-premium:hover::after {
+  width: 100%;
 }
 
 .footer-bottom {
   text-align: center;
   padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
   color: #4b5563;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
 }
+
+
+@media (max-width: 768px) {
+  .footer-nav-horizontal ul {
+    gap: 2rem !important;
+  }
+}
+
 
 /* --- Custom Modal Confirmation (Turbo) --- */
 .modal-overlay {
@@ -1477,3 +1500,47 @@ input:checked + .slider {
     right: 0;
   }
 }
+
+/* ==========================================================================
+   SIMULATOR SECTION (BOEING 737)
+   ========================================================================== */
+.simulator-section {
+  position: relative;
+  z-index: 1;
+}
+
+.simulator-image img:hover {
+  transform: scale(1.02) translateY(-5px);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+}
+
+.sim-features > div {
+  transition: all 0.3s ease;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid transparent;
+}
+
+.sim-features > div:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 167, 34, 0.2);
+  transform: translateX(10px);
+}
+
+@media (max-width: 968px) {
+  .simulator-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 3rem !important;
+  }
+  
+  .sim-features > div {
+    text-align: left;
+  }
+  
+  .simulator-content h3 {
+    font-size: 2.8rem !important;
+  }
+}
+
+

@@ -20,7 +20,7 @@
   <!-- Hero Section com Slider de Background -->
   <header class="hero-sales-section">
     <div class="hero-slider">
-      <div class="hero-slide active" style="background-image: url('/banner1.avif');"></div>
+      <div class="hero-slide active" style="background-image: url('/banner1.jpg');"></div>
       <div class="hero-slide" style="background-image: url('/cockpit1.avif');"></div>
       <div class="hero-slide" style="background-image: url('/cockpit2.avif');"></div>
     </div>
@@ -201,45 +201,112 @@
           heroSlides[currentHeroSlide].classList.add('active');
         }, 6000); // 6 segundos por imagem
       }
+
+      // Scroll Reveal para Seção de Simulador
+      const simElements = document.querySelectorAll('.simulator-image, .simulator-content');
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            entry.target.style.filter = 'blur(0)';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      simElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.filter = 'blur(10px)';
+        el.style.transform = index === 0 ? 'translateX(-30px)' : 'translateX(30px)';
+        el.style.transition = `all 1.2s cubic-bezier(0.22, 1, 0.36, 1) ${index * 0.2}s`;
+        observer.observe(el);
+      });
     });
+
   </script>
 
-  <!-- Stage 4: Rule Section -->
-  <section id="regras" class="rules-section">
-    <div class="rules-container">
-      <div class="rules-header">
-        <h2 class="section-title">O Algoritmo de Aprovação</h2>
-        <p style="text-align: center; color: var(--text-muted); margin-top: -3rem; margin-bottom: 4rem;">O nosso sistema funciona exatamente como a banca oficial da ANAC.</p>
+  <!-- Stage 4: Simulator Section -->
+  <section id="simulador" class="simulator-section" style="padding: 10rem 2rem; background: var(--navy-midnight); color: white; overflow: hidden;">
+    <div class="simulator-container" style="display: flex; align-items: center; gap: 5rem; max-width: 1200px; margin: 0 auto; flex-wrap: wrap;">
+      <div class="simulator-image" style="flex: 1; min-width: 300px; position: relative;" id="sim-img-trigger">
+        <div style="position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; background: var(--aviation-gold); opacity: 0.1; filter: blur(100px); border-radius: 50%;"></div>
+        <img src="/simulador_aviacao_moderno.png" alt="Boeing 737 Simulator" style="width: 100%; border-radius: 2rem; box-shadow: 0 30px 60px rgba(0,0,0,0.5); object-fit: cover; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.5s ease;">
+      </div>
+      <div class="simulator-content" style="flex: 1; min-width: 300px;">
+        <h2 style="font-size: 0.85rem; color: var(--aviation-gold); text-transform: uppercase; letter-spacing: 4px; font-weight: 800; margin-bottom: 1.5rem;">Tecnologia de Elite</h2>
+        <h3 style="font-size: min(3.5rem, 10vw); line-height: 1.1; font-weight: 900; margin-bottom: 2rem;">Simulador <br><span style="color: var(--aviation-gold);">Boeing 737</span></h3>
+        <p style="font-size: 1.2rem; color: #cbd5e1; line-height: 1.7; margin-bottom: 3rem;">
+          Treine no cockpit do jato comercial mais icônico do mundo. Nossa simulação avançada permite que você domine sistemas complexos de navegação e procedimentos de cabine com realismo absoluto, preparando-o para as maiores companhias aéreas.
+        </p>
+        
+        <div class="sim-features" style="display: grid; gap: 2.5rem;">
+          <div style="display: flex; gap: 1.5rem; align-items: start;">
+            <div style="font-size: 1.5rem; color: var(--aviation-gold);">✈️</div>
+            <div>
+              <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem;">Iniciação ao Jato</h4>
+              <p style="color: #94a3b8; font-size: 0.95rem;">Transição suave de aeronaves a pistão para a performance e lógica de uma turbina.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 1.5rem; align-items: start;">
+            <div style="font-size: 1.5rem; color: var(--aviation-gold);">🖥️</div>
+            <div>
+              <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem;">Gerenciamento de Sistemas</h4>
+              <p style="color: #94a3b8; font-size: 0.95rem;">Domine o FMC, MCP e procedimentos de cabine em tempo real.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 1.5rem; align-items: start;">
+            <div style="font-size: 1.5rem; color: var(--aviation-gold);">📡</div>
+            <div>
+              <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem;">Confiança para Seleções</h4>
+              <p style="color: #94a3b8; font-size: 0.95rem;">Chegue nas avaliações de companhias aéreas com vantagem operacional real.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 4rem;">
+          <a href="#" class="btn-hero-secondary" style="border-radius: 8px; padding: 1.2rem 2.5rem; font-size: 1.1rem;">Falar com Consultor</a>
+        </div>
+      </div>
       </div>
     </div>
   </section>
 
+
+
   <!-- Footer -->
   <footer class="landing-footer">
-    <div class="footer-content">
-      <div class="footer-brand">
-        <span class="text-accent">CIDA</span> SIMULADOS
-        <p style="font-size: 0.9rem; color: #64748b; margin-top: 1rem; max-width: 300px;">
-          Centro de Instrução Aéreo. A plataforma definitiva para sua formação aeronáutica.
+    <div class="footer-container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; gap: 2rem;">
+      <div class="footer-brand" style="text-align: left; flex: 1; min-width: 300px;">
+        <span class="text-accent" style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px;">CIDA</span> 
+        <span style="font-size: 1.2rem; color: #94a3b8; font-weight: 400; letter-spacing: 3px; margin-left: 10px; text-transform: uppercase;">Simulados</span>
+        <p style="font-size: 0.9rem; color: #64748b; margin-top: 1rem; max-width: 450px; line-height: 1.6;">
+          Centro de Instrução e Desenvolvimento Aéreo. <br>A plataforma definitiva para sua formação aeronáutica de alto nível.
         </p>
       </div>
-      <div class="footer-links">
-        <div>
-          <h5 style="color: white; margin-bottom: 1.5rem; font-size: 1rem;">Navegação</h5>
-          <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.8rem;">
-            <li><a href="#materias">Matérias</a></li>
-            <li><a href="#regras">Regras</a></li>
-            <% if user_signed_in? %>
-              <li><%= link_to "Área do Aluno", authenticated_root_path %></li>
-            <% else %>
-              <li><%= link_to "Login", new_user_session_path %></li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
+      
+      <nav class="footer-nav-horizontal" style="flex: 1; min-width: 300px;">
+        <ul style="list-style: none; padding: 0; display: flex; justify-content: flex-end; gap: 2.5rem; flex-wrap: wrap;">
+          <li><a href="#cursos" class="footer-link-premium">Cursos</a></li>
+          <li><a href="#simulador" class="footer-link-premium">Simulador 737</a></li>
+          <li><a href="#quem-somos" class="footer-link-premium">Quem Somos</a></li>
+          <% if user_signed_in? %>
+            <li><%= link_to "Área do Aluno", authenticated_root_path, class: "footer-link-premium" %></li>
+          <% else %>
+            <li><%= link_to "Login", new_user_session_path, class: "footer-link-premium" %></li>
+          <% end %>
+        </ul>
+      </nav>
     </div>
+    
     <div class="footer-bottom">
-      &copy; <%= Time.current.year %> Centro de Instrução Aéreo. Todos os direitos reservados.
+      &copy; <%= Time.current.year %> Centro de Instrução e Desenvolvimento Aéreo. Todos os direitos reservados.
     </div>
   </footer>
+
 </div>
