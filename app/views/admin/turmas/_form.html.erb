@@ -1,0 +1,29 @@
+<div style="background: white; border-radius: 1.5rem; padding: 2.5rem; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto;">
+  <%= form_with(model: [:admin, turma], local: true) do |f| %>
+    <% if turma.errors.any? %>
+      <div style="background: #fef2f2; border: 1px solid #ef4444; color: #b91c1c; padding: 1rem; border-radius: 0.8rem; margin-bottom: 2rem;">
+        <h4 style="margin-top: 0;"><%= pluralize(turma.errors.count, "erro") %> impediram a gravação:</h4>
+        <ul style="margin-bottom: 0;">
+          <% turma.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group" style="margin-bottom: 1.5rem;">
+      <%= f.label :name, "Nome da Turma", class: "form-label" %>
+      <%= f.text_field :name, class: "form-input", placeholder: "Ex: TURMA A - Piloto Privado", required: true %>
+    </div>
+
+    <div class="form-group" style="margin-bottom: 2rem;">
+      <%= f.label :description, "Descrição (Opcional)", class: "form-label" %>
+      <%= f.text_area :description, class: "form-input", rows: 4, placeholder: "Detalhes sobre a turma..." %>
+    </div>
+
+    <div style="display: flex; gap: 1rem; justify-content: flex-end; align-items: stretch;">
+      <%= link_to "Cancelar", admin_turmas_path, class: "btn-outline", style: "display: flex; align-items: center; justify-content: center; padding: 0.8rem 1.5rem; text-decoration: none; min-width: 120px;" %>
+      <%= f.submit turma.new_record? ? "Criar Turma" : "Atualizar Turma", class: "btn-primary", style: "padding: 0.8rem 1.5rem; cursor: pointer; border: none; min-width: 150px;" %>
+    </div>
+  <% end %>
+</div>

@@ -1,5 +1,5 @@
 class Admin::QuestionsController < Admin::BaseController
-  before_action :set_exam, only: [:new, :create]
+  before_action :set_parent, only: [:new, :create]
   before_action :set_question, only: [:show, :edit, :update, :destroy]
 
   # GET /admin/questions/:id
@@ -9,13 +9,18 @@ class Admin::QuestionsController < Admin::BaseController
   end
 
   # GET /admin/exams/:exam_id/questions/new
+  # GET /admin/topics/:topic_id/questions/new
   def new
-    @question = @exam.questions.build
+    @question = @parent.questions.build
+    @question.topic_id = @parent.id if @parent.is_a?(Topic)
   end
 
   # POST /admin/exams/:exam_id/questions
+  # POST /admin/topics/:topic_id/questions
   def create
-    @question = @exam.questions.build(question_params)
+    @question = @parent.questions.build(question_params)
+    @question.topic_id = @parent.id if @parent.is_a?(Topic)
+    
     if @question.save
       redirect_to admin_question_path(@question), notice: 'Enunciado criado perfeitamente! Agora crie as opções A, B, C... para ele.'
     else
@@ -37,18 +42,22 @@ class Admin::QuestionsController < Admin::BaseController
   end
 
   def destroy
-    @exam = @question.exam
+    parent = @question.topic || @question.exam
     if @question.destroy
-      redirect_to admin_exam_path(@exam), notice: 'Questão e todas opções foram removidas.'
+      redirect_to (parent.is_a?(Topic) ? admin_topic_path(parent) : admin_exam_path(parent)), notice: 'Questão e todas opções foram removidas.'
     else
-      redirect_to admin_exam_path(@exam), alert: @question.errors.full_messages.to_sentence
+      redirect_to admin_question_path(@question), alert: @question.errors.full_messages.to_sentence
     end
   end
 
   private
 
-  def set_exam
-    @exam = Exam.find(params[:exam_id])
+  def set_parent
+    if params[:exam_id]
+      @parent = Exam.find(params[:exam_id])
+    elsif params[:topic_id]
+      @parent = Topic.find(params[:topic_id])
+    end
   end
 
   def set_question

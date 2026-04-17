@@ -2,8 +2,14 @@
   <div style="display: flex; justify-content: flex-start; margin-bottom: 1rem;">
     <%= link_to '← Voltar à Lista de Alunos', admin_exam_sessions_path, class: "btn-outline", style: "text-decoration: none; padding: 0.4rem 1rem; font-size: 0.9rem;" %>
   </div>
-  <h1 class="page-title">Histórico Escolar: <%= @user.name || @user.email.split('@').first %></h1>
-  <p class="page-subtitle">Auditando detalhes da Prova: <strong><%= @exam.title %></strong> da Trilha <%= @exam.topic.title %></p>
+  <h1 class="page-title">Histórico Escolar: <%= @user.full_name || @user.email.split('@').first %></h1>
+  <% if @exam_session.exam %>
+    <p class="page-subtitle">Auditando detalhes da Prova: <strong><%= @exam_session.exam.title %></strong> <%= "da Trilha #{@exam_session.exam.topic.title}" if @exam_session.exam.topic %></p>
+  <% elsif @exam_session.selected_topic %>
+    <p class="page-subtitle">Exercício Individual da Matéria: <strong><%= @exam_session.selected_topic.title %></strong></p>
+  <% else %>
+    <p class="page-subtitle"><strong>Simulado Dinâmico ANAC</strong> (Simulado Completo)</p>
+  <% end %>
 </div>
 
 <div style="max-width: 1400px; margin: 0 auto; padding-bottom: 4rem;">
@@ -35,8 +41,10 @@
              <% is_active = (st_sess.id == @exam_session.id) %>
              <li>
                <%= link_to admin_exam_session_path(st_sess), style: "display: block; padding: 0.8rem 1rem; border-radius: 0.6rem; border: 1px solid #{is_active ? 'var(--primary)' : 'transparent'}; background: #{is_active ? '#eef2ff' : '#f9fafb'}; color: #{is_active ? 'var(--primary)' : 'var(--text-main)'}; text-decoration: none; font-size: 0.95rem; font-weight: #{is_active ? 'bold' : 'normal'}; transition: all 0.2s ease;" do %>
-                 <span style="display: block; font-size: 0.75rem; color: #{is_active ? 'var(--primary)' : 'var(--text-muted)'}; margin-bottom: 0.3rem;"><%= st_sess.exam.topic.title %></span>
-                 <%= st_sess.exam.title %>
+                 <span style="display: block; font-size: 0.75rem; color: #{is_active ? 'var(--primary)' : 'var(--text-muted)'}; margin-bottom: 0.3rem;">
+                   <%= st_sess.exam&.topic&.title || st_sess.selected_topic&.title || "Simulado ANAC" %>
+                 </span>
+                 <%= st_sess.exam&.title || (st_sess.selected_topic_id ? "Exercício" : "Dinâmico") %>
                  
                  <!-- Status visual da tentaviva -->
                  <div style="margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">

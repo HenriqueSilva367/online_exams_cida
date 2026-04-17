@@ -1,0 +1,36 @@
+<div class="dashboard-header">
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <div>
+      <h1 class="page-title">Gestão de Turmas</h1>
+      <p class="page-subtitle">Organize alunos em grupos para liberações de simulados em massa.</p>
+    </div>
+    <%= link_to "Nova Turma", new_admin_turma_path, class: "btn-primary", style: "background-color: var(--primary); padding: 0.8rem 1.5rem; width: 20%; text-align: center; text-decoration: none;" %>
+  </div>
+</div>
+
+<div class="topics-grid" style="margin-top: 2rem;">
+  <% @turmas.each do |turma| %>
+    <div class="topic-card">
+      <div class="topic-card-body">
+        <h3 class="topic-title"><%= turma.name %></h3>
+        <p class="topic-desc"><%= truncate(turma.description, length: 120) || "Sem descrição" %></p>
+        <div style="display: flex; gap: 1rem; margin-top: 1rem; font-size: 0.85rem;">
+          <span style="color: var(--primary); font-weight: 700;">👥 <%= turma.users.count %> Alunos</span>
+          <span style="color: #10b981; font-weight: 700;">📝 <%= turma.turma_simulation_releases.count %> Simulados</span>
+        </div>
+      </div>
+      <div class="topic-card-footer">
+        <%= link_to '📋 Gestão', admin_turma_path(turma), class: "btn-outline" %>
+        <%= link_to '✏️', edit_admin_turma_path(turma), class: "btn-outline" %>
+        <%= button_to '🗑️', admin_turma_path(turma), method: :delete, form: { data: { turbo_confirm: 'Excluir turma?' } }, class: "btn-danger" %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @turmas.empty? %>
+    <div class="empty-state">
+      <p>Nenhuma turma cadastrada.</p>
+      <%= link_to "Criar Primeira Turma", new_admin_turma_path, class: "btn-primary", style: "display: inline-block; margin-top: 1rem;" %>
+    </div>
+  <% end %>
+</div>

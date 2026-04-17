@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_09_174600) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_17_144230) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,7 +53,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_174600) do
 
   create_table "exam_sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "exam_id", null: false
+    t.bigint "exam_id"
     t.integer "status", default: 0
     t.integer "score"
     t.datetime "started_at"
@@ -69,7 +69,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_174600) do
   end
 
   create_table "exams", force: :cascade do |t|
-    t.bigint "topic_id", null: false
+    t.bigint "topic_id"
     t.string "title"
     t.text "description"
     t.datetime "created_at", null: false
@@ -102,7 +102,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_174600) do
   end
 
   create_table "questions", force: :cascade do |t|
-    t.bigint "exam_id", null: false
+    t.bigint "exam_id"
     t.text "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -123,8 +123,35 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_174600) do
     t.index ["question_id"], name: "index_session_answers_on_question_id"
   end
 
+  create_table "simulation_releases", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "exam_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exam_id"], name: "index_simulation_releases_on_exam_id"
+    t.index ["user_id", "exam_id"], name: "index_simulation_releases_on_user_id_and_exam_id", unique: true
+    t.index ["user_id"], name: "index_simulation_releases_on_user_id"
+  end
+
   create_table "topics", force: :cascade do |t|
     t.string "title"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "turma_simulation_releases", force: :cascade do |t|
+    t.bigint "turma_id", null: false
+    t.bigint "exam_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exam_id"], name: "index_turma_simulation_releases_on_exam_id"
+    t.index ["turma_id", "exam_id"], name: "index_turma_simulation_releases_on_turma_id_and_exam_id", unique: true
+    t.index ["turma_id"], name: "index_turma_simulation_releases_on_turma_id"
+  end
+
+  create_table "turmas", force: :cascade do |t|
+    t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -146,6 +173,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_174600) do
     t.integer "student_type", default: 0
     t.integer "credits", default: 0
     t.boolean "must_change_password", default: true
+    t.boolean "simulados_released", default: false
+    t.bigint "turma_id"
     t.index ["canac"], name: "index_users_on_canac", unique: true
     t.index ["cpf"], name: "index_users_on_cpf", unique: true
     t.index ["credits"], name: "index_users_on_credits"
@@ -153,6 +182,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_174600) do
     t.index ["must_change_password"], name: "index_users_on_must_change_password"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["student_type"], name: "index_users_on_student_type"
+    t.index ["turma_id"], name: "index_users_on_turma_id"
   end
 
   create_table "versions", force: :cascade do |t|
@@ -181,4 +211,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_09_174600) do
   add_foreign_key "session_answers", "answers"
   add_foreign_key "session_answers", "exam_sessions"
   add_foreign_key "session_answers", "questions"
+  add_foreign_key "simulation_releases", "exams"
+  add_foreign_key "simulation_releases", "users"
+  add_foreign_key "turma_simulation_releases", "exams"
+  add_foreign_key "turma_simulation_releases", "turmas"
+  add_foreign_key "users", "turmas"
 end

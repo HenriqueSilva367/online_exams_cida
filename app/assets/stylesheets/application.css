@@ -24,12 +24,18 @@
   /* LITO SYSTEM MAPPING */
   --primary: var(--cobalt-blue);
   --primary-hover: var(--royal-blue);
+  --secondary: #6366f1; /* Indigo vibrant for gradients */
   --accent: var(--aviation-gold);
   --bg-dark: var(--navy-midnight);
   
+  /* COLOR PALETTE EXPANSION */
+  --anac-green: #10b981;
+  --anac-blue: #3b82f6;
+  --anac-purple: #8b5cf6;
+  
   /* LEGACY / DEFAULT */
-  --bg-gradient-start: #EEF2FF;
-  --bg-gradient-end: #E0E7FF;
+  --bg-gradient-start: #f8fafc;
+  --bg-gradient-end: #f1f5f9;
   --text-main: #1F2937;
   --text-muted: #6B7280;
   --card-bg: rgba(255, 255, 255, 0.85);
@@ -169,10 +175,10 @@ body {
   box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
 }
 
-.btn-primary:hover {
+/* .btn-primary:hover {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
-}
+} */
 
 .btn-primary:active {
   transform: translateY(1px);
@@ -465,10 +471,10 @@ body {
   display: inline-block;
 }
 
-.btn-outline:hover {
+/* .btn-outline:hover {
   background: var(--primary);
   color: white;
-}
+} */
 
 .btn-danger {
   background: transparent;
@@ -482,10 +488,10 @@ body {
   transition: all 0.2s;
 }
 
-.btn-danger:hover {
+/* .btn-danger:hover {
   background: #dc2626;
   color: white;
-}
+} */
 
 .header-actions {
   display: flex;

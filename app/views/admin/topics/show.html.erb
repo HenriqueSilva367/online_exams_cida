@@ -3,8 +3,9 @@
     <h1 class="page-title"><%= @topic.title %></h1>
     <p class="page-subtitle">Detalhes do tópico e exames associados</p>
   </div>
-  <div class="header-actions">
-    <%= link_to '✏️ Editar', edit_admin_topic_path(@topic), class: "btn-primary", style: "text-decoration: none;" %>
+  <div class="header-actions" style="display: flex; gap: 1rem;">
+    <%= button_to "🎯 Gerar Exercício Aleatório (20 Questões)", generate_exercise_admin_generators_path(topic_id: @topic.id), method: :post, class: "btn-primary", style: "border: none; cursor: pointer; padding: 0.6rem 1.2rem; text-decoration: none;" %>
+    <%= link_to '✏️ Editar Matéria', edit_admin_topic_path(@topic), class: "btn-outline", style: "text-decoration: none;" %>
     <%= link_to '← Voltar', admin_topics_path, class: "btn-outline" %>
   </div>
 </div>
@@ -17,26 +18,27 @@
 
 <div class="topic-details-card" style="margin-top: 2rem;">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    <h3 style="margin: 0; color: var(--text-main);">Provas / Exames Cadastrados</h3>
-    <%= link_to '📋 Criar Nova Prova aqui', new_admin_topic_exam_path(@topic), class: "btn-primary", style: "text-decoration: none;" %>
+    <h3 style="margin: 0; color: var(--text-main);">Questões Cadastradas NESTA Matéria</h3>
+    <%= link_to '➕ Criar Nova Questão', new_admin_topic_question_path(@topic), class: "btn-primary", style: "text-decoration: none;" %>
   </div>
 
-  <% if @topic.exams.any? %>
+  <% if @questions.any? %>
     <table style="width: 100%; border-collapse: collapse; text-align: left;">
       <thead>
           <tr style="border-bottom: 2px solid var(--border-color);">
-            <th style="padding: 1rem;">Prova / Tema</th>
+            <th style="padding: 1rem;">Enunciado</th>
             <th style="padding: 1rem; text-align: right;">Ações</th>
           </tr>
         </thead>
         <tbody>
-          <% @topic.exams.each do |exam| %>
+          <% @questions.each do |question| %>
             <tr style="border-bottom: 1px solid var(--border-color);">
-              <td style="padding: 1rem; font-weight: 600;"><%= exam.title %></td>
+              <td style="padding: 1rem; font-weight: 500;">
+                <%= truncate(question.title, length: 100) %>
+              </td>
               <td style="padding: 1rem; text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
-              <%= link_to 'Gerenciar Perguntas', admin_exam_path(exam), class: "btn-outline" %>
-              <%= link_to 'Editar Prova', edit_admin_exam_path(exam), class: "btn-outline" %>
-              <%= button_to 'Excluir', admin_exam_path(exam), method: :delete, form: { data: { turbo_confirm: 'Isto apagará a prova e todas as notas dos alunos nela!' } }, class: "btn-danger" %>
+              <%= link_to 'Ver/Editar Alternativas', admin_question_path(question), class: "btn-outline" %>
+              <%= button_to '🗑️', admin_question_path(question), method: :delete, form: { data: { turbo_confirm: 'Isto apagará a questão e todas as alternativas!' } }, class: "btn-danger" %>
             </td>
           </tr>
         <% end %>
@@ -44,7 +46,43 @@
     </table>
   <% else %>
     <div class="empty-state" style="background: transparent; border: 1px dashed var(--border-color); padding: 2rem;">
-      <p>Nenhuma prova cadastrada para esta trilha de estudo ainda.</p>
+      <p>Nenhuma questão cadastrada para esta matéria ainda.</p>
+    </div>
+  <% end %>
+</div>
+
+<!-- Seção: Histórico de Exercícios Gerados -->
+<div class="topic-details-card" style="margin-top: 2rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h3 style="margin: 0; color: var(--text-main);">📋 Histórico de Exercícios Gerados (20 Questões)</h3>
+  </div>
+
+  <% if @exams.any? %>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
+            <th style="padding: 1rem;">Título do Exercício</th>
+            <th style="padding: 1rem;">Data de Geração</th>
+            <th style="padding: 1rem; text-align: right;">Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @exams.each do |exam| %>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 1rem; font-weight: 600; color: #10b981;"><%= exam.title %></td>
+              <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;"><%= exam.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+              <td style="padding: 1rem; text-align: right;">
+                <%= link_to '📋 Ver Exercício', admin_exam_path(exam), class: "btn-outline", style: "padding: 0.4rem 1rem; text-decoration: none;" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="empty-state" style="background: transparent; border: 1px dashed var(--border-color); padding: 2rem;">
+      <p>Nenhum exercício aleatório foi gerado para esta matéria ainda.</p>
     </div>
   <% end %>
 </div>

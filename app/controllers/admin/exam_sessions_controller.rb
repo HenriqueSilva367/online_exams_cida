@@ -11,11 +11,10 @@ class Admin::ExamSessionsController < Admin::BaseController
   def show
     @user = @exam_session.user
     # All sessions for the left sidebar
-    @all_sessions_for_user = @user.exam_sessions.includes(exam: :topic).order(created_at: :desc)
+    @all_sessions_for_user = @user.exam_sessions.order(created_at: :desc)
     
-    # Recalculate everything for the specific student's attempt to show their visual card
-    @exam = @exam_session.exam
-    @questions = @exam.questions.includes(:answers)
+    # Get questions that were actually in this session
+    @questions = Question.where(id: @exam_session.session_answers.pluck(:question_id)).includes(:answers)
     @answered_questions = @exam_session.session_answers.where.not(answer_id: nil).count
     @total_questions = @questions.count
     @correct_answers = 0
@@ -26,7 +25,7 @@ class Admin::ExamSessionsController < Admin::BaseController
       end
     end
     
-    @incorrect_answers = @answered_questions - @correct_answers
+    @incorrect_answers = @total_questions - @correct_answers
     @accuracy = @total_questions > 0 ? (@correct_answers.to_f / @total_questions * 100).round(2) : 0
   end
 

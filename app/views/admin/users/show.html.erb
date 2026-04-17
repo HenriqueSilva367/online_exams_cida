@@ -40,6 +40,73 @@
       </div>
     </div>
 
+    <!-- Seção: Liberação Individual de Simulados (ANAC) -->
+    <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <h2 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-main); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem;">
+        🛩️ Liberação Individual de Simulados (ANAC)
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+        Escolha exatamente quais simulados completos este aluno pode visualizar e realizar.
+      </p>
+
+      <% if @anac_exams.empty? %>
+        <div style="text-align: center; padding: 3rem; color: var(--text-muted); background: #f8fafc; border-radius: 1rem;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+          Nenhum simulado ANAC gerado ainda. Use o gerador de simulados para criar um.
+        </div>
+      <% else %>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-color); text-align: left; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+                <th style="padding: 0.75rem 1rem;">Simulado</th>
+                <th style="padding: 0.75rem 1rem; text-align: center;">Questões</th>
+                <th style="padding: 0.75rem 1rem; text-align: center;">Criado em</th>
+                <th style="padding: 0.75rem 1rem; text-align: center;">Status</th>
+                <th style="padding: 0.75rem 1rem; text-align: right;">Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @anac_exams.each do |exam| %>
+                <% released = @released_exam_ids.include?(exam.id) %>
+                <% release = @user.simulation_releases.find_by(exam_id: exam.id) if released %>
+                <tr style="border-bottom: 1px solid var(--border-color); background: <%= released ? '#f0fdf4' : 'transparent' %>; transition: background 0.2s;">
+                  <td style="padding: 0.85rem 1rem;">
+                    <div style="font-weight: 600; color: #1e293b;"><%= exam.title %></div>
+                    <div style="font-size: 0.78rem; color: var(--text-muted);"><%= exam.description.presence&.truncate(60) %></div>
+                  </td>
+                  <td style="padding: 0.85rem 1rem; text-align: center;">
+                    <span style="font-weight: 700; color: #1e40af;"><%= exam.questions.count %></span>
+                  </td>
+                  <td style="padding: 0.85rem 1rem; text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+                    <%= exam.created_at.strftime("%d/%m/%Y") %>
+                  </td>
+                  <td style="padding: 0.85rem 1rem; text-align: center;">
+                    <% if released %>
+                      <span style="display: inline-flex; align-items: center; gap: 0.3rem; background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700;">
+                        ✅ Liberado
+                      </span>
+                    <% else %>
+                      <span style="display: inline-flex; align-items: center; gap: 0.3rem; background: #f1f5f9; color: #64748b; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700;">
+                        🔒 Bloqueado
+                      </span>
+                    <% end %>
+                  </td>
+                  <td style="padding: 0.85rem 1rem; text-align: right;">
+                    <% if released %>
+                      <%= button_to "Revogar", admin_simulation_release_path(release), method: :delete, class: "btn-danger", style: "padding: 0.3rem 0.8rem; font-size: 0.75rem;" %>
+                    <% else %>
+                      <%= button_to "Liberar", admin_simulation_releases_path(user_id: @user.id, exam_id: exam.id), method: :post, class: "btn-primary", style: "padding: 0.3rem 0.8rem; font-size: 0.75rem; background: #10b981; border: none;" %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </div>
+
     <!-- Seção: Clube de Pontos (Atividades Extras) -->
     <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
@@ -99,17 +166,32 @@
       </span>
 
       <div style="margin-top: 2rem; display: grid; gap: 1rem; text-align: left; font-size: 0.9rem;">
+        <div><strong>Turma:</strong> <%= @user.turma&.name || "Individual (Sem Turma)" %></div>
         <div><strong>CPF:</strong> <%= @user.cpf %></div>
         <div><strong>CANAC:</strong> <%= @user.canac %></div>
         <div><strong>WhatsApp:</strong> <%= @user.phone %></div>
       </div>
     </div>
 
+    <!-- Status de Liberação (Simulados) -->
+    <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid var(--border-color); text-align: center; border-top: 5px solid <%= @user.simulados_released ? '#10b981' : '#ef4444' %>;">
+      <h3 style="margin: 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Status Simulados ANAC</h3>
+      <div style="font-size: 1.5rem; font-weight: 800; margin: 1rem 0; color: <%= @user.simulados_released ? '#10b981' : '#ef4444' %>;">
+        <%= @user.simulados_released ? "LIBERADO" : "BLOQUEADO" %>
+      </div>
+      <%= button_to (@user.simulados_released ? "Bloquear Acesso" : "Liberar Acesso"), toggle_simulados_admin_user_path(@user), method: :patch, class: (@user.simulados_released ? "btn-danger" : "btn-primary"), style: "width: 100%; border: none; padding: 0.8rem; border-radius: 0.8rem; font-weight: 700; cursor: pointer; color: white; background: #{@user.simulados_released ? '#ef4444' : '#10b981'};" %>
+    </div>
+
     <!-- Saldo de Créditos -->
     <div style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); border-radius: 1.5rem; padding: 2rem; color: white; text-align: center; box-shadow: 0 10px 15px -3px rgba(30, 64, 175, 0.3);">
       <h3 style="margin: 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8;">Créditos Disponíveis</h3>
       <div style="font-size: 4rem; font-weight: 900; margin: 1rem 0;"><%= @user.credits %></div>
-      <p style="font-size: 0.8rem; opacity: 0.8;">Simulados ANAC Completos</p>
+      <p style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 1.5rem;">Simulados ANAC Completos</p>
+      
+      <div style="display: flex; gap: 0.5rem; justify-content: center;">
+        <%= button_to "+1", add_credits_admin_user_path(@user, amount: 1), method: :post, class: "btn-primary", style: "background: white; color: var(--primary); border: none; padding: 0.5rem 1rem; cursor: pointer;" %>
+        <%= button_to "+5", add_credits_admin_user_path(@user, amount: 5), method: :post, class: "btn-primary", style: "background: white; color: var(--primary); border: none; padding: 0.5rem 1rem; cursor: pointer;" %>
+      </div>
     </div>
 
     <!-- Pontuação Total -->

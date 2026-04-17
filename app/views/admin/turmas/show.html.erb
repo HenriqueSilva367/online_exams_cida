@@ -1,0 +1,115 @@
+<div class="dashboard-header">
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <div>
+      <h1 class="page-title">Gestão de Turma: <%= @turma.name %></h1>
+      <p class="page-subtitle">Gerencie os alunos desta turma e os simulados liberados em grupo.</p>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <%= link_to "Editar Turma", edit_admin_turma_path(@turma), class: "btn-outline" %>
+      <%= link_to "Voltar para Lista", admin_turmas_path, class: "btn-outline" %>
+    </div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 350px; gap: 2rem; align-items: start;">
+  <div style="display: flex; flex-direction: column; gap: 2rem;">
+    
+    <!-- Seção: Liberação de Simulados para a Turma (ANAC) -->
+    <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <h2 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-main); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem;">
+        🛩️ Liberação de Simulados para a Turma
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+        Todos os alunos desta turma terão acesso aos simulados liberados abaixo.
+      </p>
+
+      <% if @anac_exams.empty? %>
+        <div style="text-align: center; padding: 3rem; color: var(--text-muted); background: #f8fafc; border-radius: 1rem;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+          Nenhum simulado ANAC gerado ainda.
+        </div>
+      <% else %>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-color); text-align: left; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">
+                <th style="padding: 0.75rem 1rem;">Simulado</th>
+                <th style="padding: 0.75rem 1rem; text-align: center;">Questões</th>
+                <th style="padding: 0.75rem 1rem; text-align: center;">Status</th>
+                <th style="padding: 0.75rem 1rem; text-align: right;">Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @anac_exams.each do |exam| %>
+                <% released = @released_exam_ids.include?(exam.id) %>
+                <% release = @turma.turma_simulation_releases.find_by(exam_id: exam.id) if released %>
+                <tr style="border-bottom: 1px solid var(--border-color); background: <%= released ? '#f0fdf4' : 'transparent' %>;">
+                  <td style="padding: 0.85rem 1rem;">
+                    <div style="font-weight: 600; color: #1e293b;"><%= exam.title %></div>
+                  </td>
+                  <td style="padding: 0.85rem 1rem; text-align: center;">
+                    <span style="font-weight: 700; color: #1e40af;"><%= exam.questions.count %></span>
+                  </td>
+                  <td style="padding: 0.85rem 1rem; text-align: center;">
+                    <% if released %>
+                      <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700;">✅ Liberado</span>
+                    <% else %>
+                      <span style="background: #f1f5f9; color: #64748b; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700;">🔒 Bloqueado</span>
+                    <% end %>
+                  </td>
+                  <td style="padding: 0.85rem 1rem; text-align: right;">
+                    <% if released %>
+                      <%= button_to "Revogar", admin_turma_simulation_release_path(release), method: :delete, class: "btn-danger", style: "padding: 0.3rem 0.8rem; font-size: 0.75rem;" %>
+                    <% else %>
+                      <%= button_to "Liberar", admin_turma_simulation_releases_path(turma_id: @turma.id, exam_id: exam.id), method: :post, class: "btn-primary", style: "padding: 0.3rem 0.8rem; font-size: 0.75rem; background: #10b981; border: none;" %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Seção: Alunos na Turma -->
+    <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--text-main); border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem;">Alunos nesta Turma</h2>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border-color); text-align: left; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">
+              <th style="padding: 1rem;">Nome</th>
+              <th style="padding: 1rem;">E-mail</th>
+              <th style="padding: 1rem; text-align: right;">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @users.each do |user| %>
+              <tr style="border-bottom: 1px solid var(--border-color);">
+                <td style="padding: 1rem; font-weight: 600;"><%= user.full_name %></td>
+                <td style="padding: 1rem; color: var(--text-muted);"><%= user.email %></td>
+                <td style="padding: 1rem; text-align: right;">
+                  <%= link_to '📊 Ver Perfil', admin_user_path(user), class: "btn-outline", style: "padding: 0.3rem 0.8rem; font-size: 0.75rem;" %>
+                </td>
+              </tr>
+            <% end %>
+            <% if @users.empty? %>
+              <tr>
+                <td colspan="3" style="padding: 3rem; text-align: center; color: var(--text-muted);">Nenhum aluno associado a esta turma ainda.</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <aside>
+    <div style="background: white; border-radius: 1.5rem; padding: 2rem; border: 1px solid var(--border-color); text-align: center;">
+      <h3 style="margin: 0; font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted);">Total de Alunos</h3>
+      <div style="font-size: 4rem; font-weight: 900; margin: 1rem 0; color: var(--primary);"><%= @users.count %></div>
+      <p style="font-size: 0.8rem; opacity: 0.8;">Alunos ativos</p>
+    </div>
+  </aside>
+</div>

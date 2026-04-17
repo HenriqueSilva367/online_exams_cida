@@ -1,7 +1,7 @@
 class Exam < ApplicationRecord
   has_paper_trail
 
-  belongs_to :topic
+  belongs_to :topic, optional: true
   has_many :questions, dependent: :destroy
   has_many :exam_sessions
   

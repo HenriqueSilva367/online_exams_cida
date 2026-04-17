@@ -1,5 +1,5 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :add_credits]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :add_credits, :toggle_simulados]
 
   def index
     @users = User.order(created_at: :desc)
@@ -14,6 +14,8 @@ class Admin::UsersController < Admin::BaseController
     @topics = Topic.all
     @authorizations = @user.exercise_authorizations.index_by(&:topic_id)
     @external_activities = @user.external_activities.order(date: :desc)
+    @anac_exams = Exam.anac_pp.order(created_at: :desc)
+    @released_exam_ids = @user.simulation_releases.pluck(:exam_id).to_set
   end
 
   def new
@@ -60,7 +62,13 @@ class Admin::UsersController < Admin::BaseController
     amount = params[:amount].to_i > 0 ? params[:amount].to_i : 5
     @user.increment!(:credits, amount)
     
-    redirect_to admin_users_path(q: params[:q]), notice: "Adicionados #{amount} créditos para #{@user.full_name}."
+    redirect_back fallback_location: admin_user_path(@user), notice: "Adicionados #{amount} créditos para #{@user.full_name}."
+  end
+
+  def toggle_simulados
+    @user.update!(simulados_released: !@user.simulados_released)
+    status = @user.simulados_released ? "LIBERADOS" : "BLOQUEADOS"
+    redirect_back fallback_location: admin_user_path(@user), notice: "Simulados ANAC foram #{status} para este aluno."
   end
 
   private
@@ -70,6 +78,6 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:full_name, :email, :password, :password_confirmation, :role, :student_type, :credits, :cpf, :canac, :phone, :must_change_password)
+    params.require(:user).permit(:full_name, :email, :password, :password_confirmation, :role, :student_type, :credits, :cpf, :canac, :phone, :must_change_password, :turma_id)
   end
 end

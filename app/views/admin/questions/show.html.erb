@@ -1,11 +1,14 @@
 <div class="dashboard-header">
   <div>
     <h1 class="page-title">Configurar Alternativas</h1>
-    <p class="page-subtitle">Prova: <%= @question.exam.title %></p>
+    <p class="page-subtitle">
+      <%= @question.exam ? "Prova: #{@question.exam.title}" : "Matéria: #{@question.topic&.title}" %>
+    </p>
   </div>
   <div class="header-actions">
     <%= link_to '✏️ Editar Enunciado', edit_admin_question_path(@question), class: "btn-outline", style: "text-decoration: none;" %>
-    <%= link_to '← Voltar à Prova', admin_exam_path(@question.exam), class: "btn-outline" %>
+    <% back_path = @question.exam ? admin_exam_path(@question.exam) : admin_topic_path(@question.topic) %>
+    <%= link_to '← Voltar', back_path, class: "btn-outline" %>
   </div>
 </div>
 

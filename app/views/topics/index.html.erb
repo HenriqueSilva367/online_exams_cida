@@ -1,64 +1,115 @@
-  <div>
-    <h1 class="page-title"><%= t('.title') %></h1>
-    <p class="page-subtitle"><%= t('.subtitle') %></p>
+<div class="dashboard-header" style="flex-direction: row; align-items: center; justify-content: space-between; gap: 2rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 2.5rem; border-radius: 2rem; margin-bottom: 3rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); position: relative; overflow: hidden;">
+  <div style="position: relative; z-index: 2;">
+    <h1 class="page-title" style="color: white; margin-bottom: 0.5rem; font-size: 2.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Bem-vindo de volta, <%= current_user.full_name.split.first %>!</h1>
+    <p style="opacity: 0.9; font-size: 1.1rem; max-width: 500px;">Sua jornada rumo às nuvens continua. Prepare-se para os simulados da ANAC com as melhores ferramentas.</p>
+    
+    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+      <div style="background: rgba(255,255,255,0.2); padding: 0.8rem 1.2rem; border-radius: 1rem; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 0.8rem; border: 1px solid rgba(255,255,255,0.3);">
+        <span style="font-size: 1.5rem;">💎</span>
+        <div>
+          <div style="font-size: 0.7rem; text-transform: uppercase; font-weight: 800; opacity: 0.8;">Créditos ANAC</div>
+          <div style="font-size: 1.25rem; font-weight: 900;"><%= current_user.credits %></div>
+        </div>
+      </div>
+      <div style="background: rgba(16, 185, 129, 0.3); padding: 0.8rem 1.2rem; border-radius: 1rem; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 0.8rem; border: 1px solid rgba(16, 185, 129, 0.4);">
+        <span style="font-size: 1.5rem;">🏆</span>
+        <div>
+          <div style="font-size: 0.7rem; text-transform: uppercase; font-weight: 800; opacity: 0.8;">Clube de Pontos</div>
+          <div style="font-size: 1.25rem; font-weight: 900;"><%= current_user.total_points %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Elemento Decorativo: Aviaozinho ou Logo -->
+  <div style="position: relative; z-index: 1; opacity: 0.2; transform: rotate(-15deg);">
+    <span style="font-size: 8rem;">✈️</span>
   </div>
 </div>
 
-<div class="topics-grid">
-  <% @topics.each do |topic| %>
-    <div class="topic-card">
-      <div class="topic-card-body">
-        <h3 class="topic-title"><%= topic.title %></h3>
-        <p class="topic-desc"><%= truncate(topic.description, length: 120) %></p>
-      </div>
-      <div class="topic-card-footer" style="justify-content: space-between;">
-        <span style="color: var(--text-muted); font-size: 0.85rem;"><%= t('.exams_count', count: topic.exams.count) %></span>
-        <% primary_exam = topic.exams.order(created_at: :desc).first %>
-        
-        <% if primary_exam %>
-          <button type="button" onclick="document.getElementById('modal-topic-<%= topic.id %>').showModal()" class="btn-primary" style="padding: 0.4rem 1rem; font-size: 0.85rem; border: none; cursor: pointer;">
-            Iniciar Prova
-          </button>
-
-          <!-- Modal de Início Direto da Dashboard -->
-          <dialog id="modal-topic-<%= topic.id %>" class="exam-modal">
-            <div class="modal-content" style="text-align: left;">
-              <h3 style="margin-top: 0; color: var(--text-main);">Escolha sua Matéria</h3>
-              <p style="color: var(--text-muted); line-height: 1.5;">Simulado: <strong><%= primary_exam.title %></strong></p>
-              
-              <div style="margin-top: 1.5rem; padding: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem;">
-                <label style="display: block; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.95rem;">Modo de Estudo:</label>
-                <%= form_with url: exam_exam_sessions_path(primary_exam), method: :post, local: true do |f| %>
-                  <div style="margin-bottom: 1rem;">
-                    <%= f.select :selected_topic_id, 
-                        options_from_collection_for_select(Topic.where(id: primary_exam.questions.select(:topic_id).distinct.compact), :id, :title),
-                        { include_blank: "Simulado Completo (Todas as Matérias)" },
-                        { class: "subject-select-field", style: "width: 100%; padding: 0.6rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; font-size: 0.9rem;" } 
-                    %>
-                  </div>
-                  
-                  <p style="font-size: 0.85rem; color: #ef4444; background: #fef2f2; padding: 0.5rem; border-radius: 0.4rem; margin-bottom: 1.5rem;">
-                    ⏱ O tempo será ajustado para <strong><%= ((primary_exam.time_duration || 180) / 5.0).ceil %> min</strong> se escolher apenas 1 matéria.
-                  </p>
-
-                  <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                    <button type="button" onclick="document.getElementById('modal-topic-<%= topic.id %>').close()" class="btn-outline" style="border: none; cursor: pointer;">Cancelar</button>
-                    <%= f.submit 'Iniciar Agora!', class: "btn-primary", style: "border: none; cursor: pointer;" %>
-                  </div>
-                <% end %>
-              </div>
+<section style="margin-bottom: 5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2 style="margin: 0; display: flex; align-items: center; gap: 0.75rem; color: var(--text-main); font-size: 1.8rem;">
+      <span style="background: #e0e7ff; padding: 0.5rem; border-radius: 12px; font-size: 1.2rem;">🚀</span> Simulados Completos ANAC
+    </h2>
+    <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Consome 1 Crédito por tentativa</span>
+  </div>
+  
+  <div class="topics-grid" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));">
+    <% if @full_simulations.any? %>
+      <% @full_simulations.each do |exam| %>
+        <div class="topic-card" style="border-top: 6px solid var(--primary); transition: transform 0.3s ease;">
+          <div class="topic-card-body" style="padding: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+              <h3 class="topic-title" style="margin: 0; font-size: 1.4rem;"><%= exam.title %></h3>
+              <span style="background: #eef2ff; color: var(--primary); padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">3 Horas</span>
             </div>
-          </dialog>
-        <% else %>
-          <%= link_to 'Detalhes', topic_path(topic), class: "btn-outline", style: "padding: 0.4rem 1rem; font-size: 0.85rem; text-decoration: none;" %>
-        <% end %>
+            <p class="topic-desc" style="min-height: 3rem;"><%= exam.description %></p>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #f1f5f9; display: flex; gap: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+              <span>📊 100 Questões</span>
+              <span>⚡ Aleatório</span>
+            </div>
+          </div>
+          <div class="topic-card-footer" style="padding: 1.5rem 2rem; background: #fafafa;">
+            <%= button_to "Iniciar Missão", exam_exam_sessions_path(exam), method: :post, class: "btn-primary", style: "width: 100%; border: none; padding: 1rem; border-radius: 1rem; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 6px -1px var(--primary);" %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="empty-state" style="grid-column: 1/-1; padding: 4rem; background: white; border: 2px dashed #e2e8f0; border-radius: 2rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+        <h3 style="margin-bottom: 0.5rem; color: var(--text-main);">Simulados ANAC Reservados</h3>
+        <p style="max-width: 400px; margin: 0 auto; color: var(--text-muted);">Você ainda não possui simulados ANAC liberados. Fale com seu instrutor assim que estiver pronto para o desafio final.</p>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
+</section>
 
-  <% if @topics.empty? %>
-    <div class="empty-state">
-      <p><%= t('.empty_state') %></p>
-    </div>
-  <% end %>
-</div>
+<section style="margin-bottom: 5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2 style="margin:0; display: flex; align-items: center; gap: 0.75rem; color: var(--text-main); font-size: 1.8rem;">
+      <span style="background: #f3e8ff; padding: 0.5rem; border-radius: 12px; font-size: 1.2rem;">🎯</span> Exercícios por Matéria
+    </h2>
+    <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Acesso Livre (Ilimitado)</span>
+  </div>
+
+  <div class="topics-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));">
+    <% @authorized_topics.each do |topic| %>
+      <% topic_exercises = @exercises_by_topic[topic.id] || [] %>
+      <div class="topic-card" style="border-top: 6px solid var(--secondary);">
+        <div class="topic-card-body" style="padding: 2rem;">
+          <h3 class="topic-title" style="color: var(--secondary); margin-bottom: 1.5rem;"><%= topic.title %></h3>
+          
+          <% if topic_exercises.any? %>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <% topic_exercises.take(3).each do |ex| %>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 0.8rem 1rem; border-radius: 1rem; border: 1px solid #f1f5f9; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                  <div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);"><%= ex.title.truncate(25) %></div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted);">20 Questões • ♾️ Tempo Livre</div>
+                  </div>
+                  <%= button_to "Fazer", exam_exam_sessions_path(ex, selected_topic_id: topic.id), method: :post, class: "btn-outline", style: "padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: 0.75rem; font-weight: 700; border-color: var(--secondary); color: var(--secondary);" %>
+<%# Use exam_id as part of the path, but selected_topic_id helps the model distinguish exercise vs full simulado if the exam is the same pool %>
+                </div>
+              <% end %>
+              <% if topic_exercises.size > 3 %>
+                <div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); padding-top: 0.5rem;">+ <%= topic_exercises.size - 3 %> outros exercícios disponíveis</div>
+              <% end %>
+            </div>
+          <% else %>
+            <div style="padding: 1.5rem; background: #f8fafc; border-radius: 1rem; text-align: center; border: 1px dashed #cbd5e1;">
+              <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📖</div>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Você está autorizado a estudar esta matéria! Peça ao instrutor para gerar os sorteios de questões.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @authorized_topics.empty? %>
+      <div class="empty-state" style="grid-column: 1/-1; padding: 4rem; background: white; border: 2px dashed #e2e8f0; border-radius: 2rem;">
+        <p style="color: var(--text-muted);">Você ainda não possui autorizações para realizar exercícios de matérias específicas. Fale com seu instrutor.</p>
+      </div>
+    <% end %>
+  </div>
+</section>

@@ -5,23 +5,32 @@
 </div>
 
 <div class="topic-details-card" style="padding: 1rem; overflow-x: auto;">
-  <table style="width: 100%; border-collapse: collapse; text-align: left;">
+  <table style="width: 100%; border-collapse: collapse; text-align: left; table-layout: fixed;">
+    <colgroup>
+      <col style="width: 33%;">
+      <col style="width: 14%;">
+      <col style="width: 13%;">
+      <col style="width: 23%;">
+      <col style="width: 17%;">
+    </colgroup>
     <thead>
       <tr style="border-bottom: 2px solid var(--border-color);">
         <th style="padding: 1rem;"><%= t('.table.exam_topic') %></th>
-        <th style="padding: 1rem;"><%= t('.table.status') %></th>
-        <th style="padding: 1rem;"><%= t('.table.score') %></th>
-        <th style="padding: 1rem;"><%= t('.table.started_at') %></th>
-        <th style="padding: 1rem; text-align: right;"><%= t('.table.action') %></th>
+        <th style="padding: 1rem; white-space: nowrap;"><%= t('.table.status') %></th>
+        <th style="padding: 1rem; white-space: nowrap;"><%= t('.table.score') %></th>
+        <th style="padding: 1rem; white-space: nowrap;"><%= t('.table.started_at') %></th>
+        <th style="padding: 1rem; text-align: right; white-space: nowrap;"><%= t('.table.action') %></th>
       </tr>
     </thead>
     <tbody>
       <% @exam_sessions.each do |session| %>
         <tr style="border-bottom: 1px solid var(--border-color);">
-          <td style="padding: 1rem; font-weight: 600;">
-            <%= session.exam&.topic&.title %> <span style="color: var(--text-muted); font-weight: normal;"> - <%= session.exam&.title %></span>
+          <td style="padding: 1rem; font-weight: 600; vertical-align: middle; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <span title="<%= [session.exam&.topic&.title, session.exam&.title].compact.join(' - ') %>">
+              <%= session.exam&.topic&.title %> <span style="color: var(--text-muted); font-weight: normal;">- <%= session.exam&.title %></span>
+            </span>
           </td>
-          <td style="padding: 1rem;">
+          <td style="padding: 1rem; vertical-align: middle; white-space: nowrap;">
              <% if session.in_progress? %>
                <span style="background-color: #fef08a; color: #854d0e; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;"><%= t('.status.in_progress') %></span>
              <% elsif session.completed? %>
@@ -32,17 +41,17 @@
                <span style="background-color: #f1f5f9; color: #475569; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;"><%= t('.status.timeout') %></span>
              <% end %>
           </td>
-          <td style="padding: 1rem; font-weight: 600; font-size: 1.1rem; color: <%= session.score.to_i > 0 ? '#10b981' : 'var(--text-muted)' %>;">
+          <td style="padding: 1rem; font-weight: 600; font-size: 1.1rem; vertical-align: middle; white-space: nowrap; color: <%= session.score.to_i > 0 ? '#10b981' : 'var(--text-muted)' %>;">
             <%= session.score || 0 %>
           </td>
-          <td style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">
+          <td style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem; vertical-align: middle; white-space: nowrap;">
             <%= l(session.started_at, format: :short) if session.started_at %>
           </td>
-          <td style="padding: 1rem; text-align: right;">
+          <td style="padding: 1rem; text-align: right; vertical-align: middle; white-space: nowrap;">
             <% if session.in_progress? %>
-              <%= link_to t('.actions.continue'), exam_session_path(session), class: "btn-primary", style: "padding: 0.4rem 1rem; font-size: 0.85rem; text-decoration: none;" %>
+              <%= link_to t('.actions.continue'), exam_session_path(session), class: "btn-primary", style: "padding: 0.4rem 1rem; font-size: 0.85rem; text-decoration: none; min-width: 130px; display: inline-block; text-align: center;" %>
             <% else %>
-              <%= link_to t('.actions.view_results'), results_exam_session_path(session), class: "btn-outline", style: "padding: 0.4rem 1rem; font-size: 0.85rem;" %>
+              <%= link_to t('.actions.view_results'), results_exam_session_path(session), class: "btn-primary", style: "padding: 0.4rem 1rem; font-size: 0.85rem; text-decoration: none; min-width: 130px; display: inline-block; text-align: center;" %>
             <% end %>
           </td>
         </tr>

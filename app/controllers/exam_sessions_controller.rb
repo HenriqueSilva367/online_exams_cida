@@ -12,17 +12,8 @@ class ExamSessionsController < ApplicationController
     @exam = @exam_session.exam
     @session_answers = @exam_session.session_answers.index_by(&:question_id)
     
-    # If the session already has pre-filled questions (random sourcing), use them!
-    if @session_answers.any?
-      @questions = Question.where(id: @session_answers.keys).includes(:answers)
-    else
-      # Standard fixed exam
-      @questions = if @exam_session.selected_topic_id
-                     @exam.questions.where(topic_id: @exam_session.selected_topic_id).includes(:answers)
-                   else
-                     @exam.questions.includes(:answers)
-                   end
-    end
+    # Pre-filled questions are the only source now for dynamic exams
+    @questions = Question.where(id: @session_answers.keys).includes(:answers)
   end
 
   def create
@@ -35,7 +26,14 @@ class ExamSessionsController < ApplicationController
         return redirect_to topics_path, alert: 'Você ainda não tem autorização para realizar este exercício. Fale com seu Professor.'
       end
     else
-      # É um Simulado Completo
+      # É um Simulado Completo ANAC
+      individual_access = current_user.released_simulations.exists?(id: @exam.id)
+      turma_access = current_user.turma&.released_simulations&.exists?(id: @exam.id)
+
+      unless current_user.admin? || individual_access || turma_access
+        return redirect_to topics_path, alert: 'Você não possui liberação para realizar este Simulado ANAC. Fale com seu Professor.'
+      end
+
       if current_user.student? && current_user.credits <= 0
         return redirect_to topics_path, alert: 'Você não possui mais créditos de Simulados. Entre em contato com a administração.'
       end
@@ -51,15 +49,9 @@ class ExamSessionsController < ApplicationController
       started_at: Time.current
     )
 
-    # Pre-fill questions for the session
-    if @exam_session.selected_topic_id
-      random_questions = Question.where(topic_id: @exam_session.selected_topic_id)
-                                 .order("RANDOM()")
-                                 .limit(20)
-      
-      random_questions.each { |q| @exam_session.session_answers.create!(question: q) }
-    else
-      @exam.questions.each { |q| @exam_session.session_answers.create!(question: q) }
+    # Pre-fill questions purely from the existing Exam
+    @exam.questions.each do |q|
+      @exam_session.session_answers.create!(question: q)
     end
 
     redirect_to @exam_session
@@ -100,9 +92,9 @@ class ExamSessionsController < ApplicationController
   def results
     # Show stats
     @exam = @exam_session.exam
-    @questions = @exam.questions.includes(:answers)
+    @total_questions = @exam_session.session_answers.count
+    @questions = Question.where(id: @exam_session.session_answers.pluck(:question_id)).includes(:answers)
     @answered_questions = @exam_session.session_answers.where.not(answer_id: nil).count
-    @total_questions = @questions.count
     @correct_answers = 0
     
     @exam_session.session_answers.each do |sa|

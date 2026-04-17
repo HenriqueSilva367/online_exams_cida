@@ -1,7 +1,11 @@
-<div class="dashboard-header">
+<div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);">
   <div>
     <h1 class="page-title">Painel de Controle Administrativo</h1>
     <p class="page-subtitle">Bem-vindo, <%= current_user.full_name %>. Veja o resumo da plataforma abaixo.</p>
+  </div>
+  <div class="header-actions" style="display: flex; gap: 1rem;">
+    <%= button_to "🚀 Gerar Novo Simulado Completo (ANAC)", generate_full_exam_admin_generators_path, method: :post, class: "btn-primary", style: "border: none; cursor: pointer; padding: 0.7rem 1.5rem; border-radius: 0.8rem; font-weight: 700; background: var(--primary); color: white;" %>
+    <%= link_to '📋 Ver Tópicos', admin_topics_path, class: "btn-outline", style: "padding: 0.7rem 1.5rem; border-radius: 0.8rem; font-weight: 700; text-decoration: none; border: 1px solid var(--border-color); color: var(--text-main);" %>
   </div>
 </div>
 
@@ -27,13 +31,53 @@
     </div>
   </div>
 
-  <div class="topic-details-card" style="margin-bottom: 0; padding: 1.5rem; border-left: 4px solid #10b981;">
-    <div style="display: flex; align-items: center; gap: 1rem;">
-      <div style="font-size: 2rem; background: #dcfce7; padding: 0.8rem; border-radius: 12px; color: #10b981;">📝</div>
-      <div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Exercícios</div>
-        <div style="font-size: 2rem; font-weight: 900; color: var(--text-main); line-height: 1;"><%= @exercises_count %></div>
+  <div class="topic-details-card" style="margin-bottom: 0; padding: 1.5rem; border-left: 4px solid #f59e0b;">
+    <%= link_to admin_turmas_path, style: "text-decoration: none; color: inherit;" do %>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="font-size: 2rem; background: #fef3c7; padding: 0.8rem; border-radius: 12px; color: #f59e0b;">👥</div>
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Turmas</div>
+          <div style="font-size: 2rem; font-weight: 900; color: var(--text-main); line-height: 1;"><%= Turma.count %></div>
+        </div>
       </div>
-    </div>
+    <% end %>
   </div>
+</div>
+
+<!-- Seção: Simulados ANAC Gerados -->
+<div class="topic-details-card" style="margin-top: 2rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h3 style="margin: 0; color: var(--text-main); font-size: 1.25rem;">📝 Últimos Simulados Completos (ANAC)</h3>
+  </div>
+
+  <% if @recent_anac_exams.any? %>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">
+            <th style="padding: 1rem;">Título do Simulado</th>
+            <th style="padding: 1rem;">Data de Geração</th>
+            <th style="padding: 1rem;">Questões</th>
+            <th style="padding: 1rem; text-align: right;">Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @recent_anac_exams.each do |exam| %>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 1rem; font-weight: 600; color: var(--primary);"><%= exam.title %></td>
+              <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;"><%= exam.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+              <td style="padding: 1rem;"><span style="background: #f1f5f9; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700;"><%= exam.questions.count %></span></td>
+              <td style="padding: 1rem; text-align: right;">
+                <%= link_to 'Ver Simulado', admin_exam_path(exam), class: "btn-outline", style: "padding: 0.4rem 1rem; text-decoration: none;" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="empty-state" style="border: 1px dashed var(--border-color); padding: 3rem;">
+      <p>Nenhum simulado completo foi gerado automaticamente ainda.</p>
+    </div>
+  <% end %>
 </div>

@@ -2,7 +2,7 @@ class ExamSession < ApplicationRecord
   has_paper_trail
 
   belongs_to :user
-  belongs_to :exam
+  belongs_to :exam, optional: true
   belongs_to :selected_topic, class_name: 'Topic', optional: true
   has_many :session_answers, dependent: :destroy
 
@@ -10,19 +10,19 @@ class ExamSession < ApplicationRecord
   enum :result_status, { pending: 0, approved: 1, failed: 2, second_chance: 3 }
 
   def effective_duration
-    # Se houver um tópico selecionado, é um exercício (tempo livre)
-    return nil if selected_topic_id.present?
+    # Se for exercício de matéria ou tipo normal, tempo livre (nil)
+    return nil if selected_topic_id.present? || (exam && exam.normal?)
     
-    # Se for simulado completo (ANAC)
-    if user.pilot?
-      120 # 2 horas para Piloto
-    else
-      180 # 3 horas para Comissário (conforme instrução)
-    end
+    # Se for simulado completo (ANAC), padrão 180 minutos (3 horas) solicitado
+    180
   end
 
   def calculate_anac_result!
-    return unless exam.anac_pp?
+    # Se for exercício de um único tópico, não calculamos resultado no padrão ANAC (apenas score)
+    return if selected_topic_id.present?
+    
+    # Se tiver um exame, verifica se é ANAC. Se for dinâmico (sem exame), assumimos padrão ANAC
+    return if exam && !exam.anac_pp?
     
     topics_data = {}
     # Use questions that were actually present in the session (handles random pool)
@@ -30,15 +30,15 @@ class ExamSession < ApplicationRecord
     
     # Pre-fill topics_data with the correct question count from the session
     questions.each do |q|
-      t_id = q.topic_id || exam.topic_id
-      topics_data[t_id] ||= { correct: 0, total: 0, title: (q.topic&.title || exam.topic.title) }
+      t_id = q.topic_id
+      topics_data[t_id] ||= { correct: 0, total: 0, title: (q.topic&.title || "Sem Tópico") }
       topics_data[t_id][:total] += 1
     end
     
     session_answers.each do |sa|
       if sa.answer&.is_correct
         q = sa.question
-        t_id = q.topic_id || exam.topic_id
+        t_id = q.topic_id
         topics_data[t_id][:correct] += 1 if topics_data[t_id]
       end
     end

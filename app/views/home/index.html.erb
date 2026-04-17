@@ -65,7 +65,7 @@
     <div class="about-container">
       <div class="about-image" style="display: flex; flex-direction: column; gap: 2rem;">
         <img src="/hangar_escola_aviacao_1775404450116.png" alt="Nossa Infraestrutura" style="width: 100%; border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
-        <img src="/simulador_aviacao_moderno.png" alt="Treinamento de Elite" style="width: 100%; border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+        <img src="/simulador.jpg" alt="Treinamento de Elite" style="width: 100%; border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
       </div>
       <div class="about-text-content">
         <h2 class="about-tag">Certificação e Autoridade</h2>
@@ -290,8 +290,8 @@
         </p>
       </div>
       
-      <nav class="footer-nav-horizontal" style="flex: 1; min-width: 300px;">
-        <ul style="list-style: none; padding: 0; display: flex; justify-content: flex-end; gap: 2.5rem; flex-wrap: wrap;">
+      <div class="footer-nav-horizontal" style="flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: flex-end; gap: 1.5rem;">
+        <ul style="list-style: none; padding: 0; display: flex; justify-content: flex-end; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 0;">
           <li><a href="#cursos" class="footer-link-premium">Cursos</a></li>
           <li><a href="#simulador" class="footer-link-premium">Simulador 737</a></li>
           <li><a href="#quem-somos" class="footer-link-premium">Quem Somos</a></li>
@@ -301,7 +301,16 @@
             <li><%= link_to "Login", new_user_session_path, class: "footer-link-premium" %></li>
           <% end %>
         </ul>
-      </nav>
+
+        <div class="social-links" style="display: flex; gap: 1.2rem;">
+          <a href="https://www.instagram.com/centrodeinstrucaoaereo/" target="_blank" class="social-icon-premium" title="Siga-nos no Instagram" style="text-decoration: none; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); font-size: 1.2rem; color: #cbd5e1;">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://www.facebook.com/p/Cida-Centrodeinstrução-100090713912122/" target="_blank" class="social-icon-premium" title="Curta nossa página no Facebook" style="text-decoration: none; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); font-size: 1.2rem; color: #cbd5e1;">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+        </div>
+      </div>
     </div>
     
     <div class="footer-bottom">

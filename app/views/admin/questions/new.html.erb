@@ -2,13 +2,13 @@
   <div class="auth-card" style="max-width: 650px;">
     <div class="auth-header">
       <h2 class="auth-title">Nova Pergunta</h2>
-      <p class="auth-subtitle">Sua pergunta será adicionada na prova: <strong><%= @exam.title %></strong></p>
+      <p class="auth-subtitle">Sua pergunta será adicionada em: <strong><%= @parent.title %></strong></p>
     </div>
 
-    <%= render "form", question: @question, exam: @exam %>
+    <%= render "form", question: @question, parent: @parent %>
 
     <div class="auth-footer" style="margin-top: 1.5rem;">
-      <%= link_to '← Cancelar e Voltar à Prova', admin_exam_path(@exam) %>
+      <%= link_to '← Cancelar e Voltar', (@parent.is_a?(Topic) ? admin_topic_path(@parent) : admin_exam_path(@parent)) %>
     </div>
   </div>
 </div>

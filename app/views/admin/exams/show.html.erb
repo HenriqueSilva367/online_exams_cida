@@ -4,7 +4,11 @@
   </div>
   <div class="header-actions">
     <%= link_to '✏️ Alterar Regras', edit_admin_exam_path(@exam), class: "btn-outline", style: "text-decoration: none;" %>
-    <%= link_to '← Voltar à Trilha', admin_topic_path(@exam.topic), class: "btn-outline" %>
+    <% if @exam.topic %>
+      <%= link_to '← Voltar à Matéria', admin_topic_path(@exam.topic), class: "btn-outline" %>
+    <% else %>
+      <%= link_to '← Voltar ao Início', admin_dashboard_path, class: "btn-outline" %>
+    <% end %>
   </div>
 </div>
 

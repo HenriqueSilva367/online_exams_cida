@@ -10,6 +10,8 @@ class Admin::TopicsController < Admin::BaseController
   end
 
   def show
+    @questions = @topic.questions.order(created_at: :desc)
+    @exams = @topic.exams.normal.order(created_at: :desc)
   end
 
   def new

@@ -1,8 +1,17 @@
 <% 
-  url_target = question.persisted? ? [:admin, question] : [:admin, exam, question] 
+  parent ||= nil
+  url_target = if question.persisted?
+                 [:admin, question]
+               elsif parent.is_a?(Topic)
+                 [:admin, parent, :questions]
+               else
+                 [:admin, parent, :questions] # parent is Exam
+               end
 %>
 
-<%= form_with(model: url_target, class: "auth-form") do |form| %>
+<%= form_with(model: url_target, scope: :question, url: url_target, class: "auth-form") do |form| %>
+  <%= form.hidden_field :topic_id if parent.is_a?(Topic) %>
+  <%= form.hidden_field :exam_id if parent.is_a?(Exam) %>
   <% if question.errors.any? %>
     <div class="flash flash-alert">
       <strong>Ops! <%= pluralize(question.errors.count, "erro") %>:</strong>

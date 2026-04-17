@@ -1,8 +1,8 @@
 class Question < ApplicationRecord
   has_paper_trail
 
-  belongs_to :exam
-  belongs_to :topic, optional: true
+  belongs_to :exam, optional: true
+  belongs_to :topic
   has_many :answers, dependent: :destroy
   has_many :session_answers
   has_one_attached :explanation_image

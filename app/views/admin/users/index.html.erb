@@ -21,66 +21,52 @@
   <% end %>
 </div>
 
-<div class="topic-details-card" style="padding: 1rem; overflow-x: auto;">
+<div class="topic-details-card" style="padding: 0; overflow-x: auto; border: 1px solid var(--border-color); border-radius: 1.5rem;">
   <table style="width: 100%; border-collapse: collapse; text-align: left;">
     <thead>
-      <tr style="border-bottom: 2px solid var(--border-color);">
-        <th style="padding: 1rem;">Nome / E-mail</th>
-        <th style="padding: 1rem;">CPF / CANAC</th>
-        <th style="padding: 1rem;">Categoria</th>
-        <th style="padding: 1rem;">Cargo</th>
-        <th style="padding: 1rem; text-align: center;">Créditos</th>
-        <th style="padding: 1rem; text-align: center;">Pontos</th>
-        <th style="padding: 1rem; text-align: center;">Ações</th>
+      <tr style="background: #f8fafc; border-bottom: 2px solid var(--border-color);">
+        <th style="padding: 1.25rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Aluno / E-mail</th>
+        <th style="padding: 1.25rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Documentos</th>
+        <th style="padding: 1.25rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); text-align: center;">Creds</th>
+        <th style="padding: 1.25rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); text-align: center;">Pts</th>
+        <th style="padding: 1.25rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); text-align: center;">Ações Acadêmicas</th>
       </tr>
     </thead>
     <tbody>
       <% @users.each do |user| %>
-        <tr style="border-bottom: 1px solid var(--border-color); hover: background-color: #f8fafc;">
+        <tr style="border-bottom: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
           <td style="padding: 1rem;">
-            <div style="font-weight: 600; color: var(--text-main);"><%= user.full_name.presence || 'Sem nome' %></div>
+            <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem; white-space: nowrap;"><%= user.full_name.presence || 'Sem nome' %></div>
             <div style="font-size: 0.75rem; color: var(--text-muted);"><%= user.email %></div>
           </td>
-          <td style="padding: 1rem; font-size: 0.85rem;">
+          <td style="padding: 1rem; font-size: 0.8rem; white-space: nowrap;">
             <div><%= user.cpf.presence || '-' %></div>
-            <div style="color: var(--text-muted);">C: <%= user.canac.presence || '-' %></div>
+            <div style="color: var(--text-muted); font-size: 0.7rem;">C: <%= user.canac.presence || '-' %></div>
           </td>
-          <td style="padding: 1rem; font-size: 0.85rem; font-weight: 500;">
-            <%= user.student_type&.humanize || '-' %>
-          </td>
-          <td style="padding: 1rem;">
-            <% role_style = case user.role
-               when 'admin' then "background-color: #fef08a; color: #854d0e;"
-               when 'professor' then "background-color: #dcfce7; color: #166534;"
-               when 'supervisor' then "background-color: #fef3c7; color: #92400e;"
-               else "background-color: #bfdbfe; color: #1e40af;"
-               end %>
-            <span style="<%= role_style %> padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">
-              <%= user.role.humanize %>
-            </span>
-          </td>
-          <td style="padding: 1rem; text-align: center; font-weight: 800; color: var(--primary);">
+          <td style="padding: 1rem; text-align: center; font-weight: 900; color: var(--primary); font-size: 1.1rem;">
             <%= user.credits %>
           </td>
           <td style="padding: 1rem; text-align: center; font-weight: 800; color: #10b981;">
             <%= user.total_points %>
           </td>
-          <td style="padding: 1rem; text-align: center;">
-            <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: nowrap;">
+          <td style="padding: 1rem; width: 400px; min-width: 400px;">
+            <div style="display: flex; gap: 8px; justify-content: flex-start; align-items: center; white-space: nowrap;">
               <% if user.student? %>
-                <%= form_with url: add_credits_admin_user_path(user), method: :patch, local: true, style: "display: flex; flex-direction: row; gap: 4px; align-items: center; margin: 0; min-width: max-content;" do |f| %>
-                  <%= hidden_field_tag :q, params[:q] %>
-                  <%= f.number_field :amount, value: 5, min: 1, style: "width: 50px; padding: 0 4px; font-size: 0.85rem; text-align: center; height: 32px; border: 1px solid #cbd5e1; border-radius: 6px; background: white; box-sizing: border-box;" %>
-                  <%= f.submit "+ Crédito", class: "btn-credit-outline", style: "background: transparent; border: 1px solid #10b981; color: #10b981; padding: 0 10px; font-size: 0.8rem; height: 32px; border-radius: 6px; cursor: pointer; white-space: nowrap; font-weight: 500; transition: all 0.2s;" %>
-                <% end %>
+                <div style="display: flex; align-items: center; height: 32px; flex-shrink: 0;">
+                  <%= form_with url: add_credits_admin_user_path(user), method: :post, local: true, style: "display: flex; margin: 0; align-items: center; gap: 8px;" do |f| %>
+                    <%= hidden_field_tag :q, params[:q] %>
+                    <%= f.number_field :amount, value: 5, min: 1, style: "width: 45px; padding: 0 4px; font-size: 0.8rem; text-align: center; height: 32px; border: 1px solid #cbd5e1; background: white; border-radius: 6px; box-sizing: border-box;" %>
+                    <%= f.submit "+Crédito", class: "btn-outline", style: "background: transparent; border: 1px solid #10b981; color: #10b981; padding: 0 10px; font-size: 0.75rem; height: 32px; cursor: pointer; font-weight: 700; border-radius: 6px; box-sizing: border-box;" %>
+                  <% end %>
+                </div>
               <% end %>
               
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <%= link_to 'Editar', edit_admin_user_path(user), class: "btn-outline", style: "padding: 0 0.8rem; font-size: 0.8rem; height: 32px; display: flex; align-items: center; text-decoration: none; white-space: nowrap;" %>
-                <% unless user == current_user %>
-                  <%= button_to 'Excluir', admin_user_path(user), method: :delete, form: { data: { turbo_confirm: 'Certeza?' } }, class: "btn-danger", style: "padding: 0 0.8rem; font-size: 0.8rem; height: 32px; display: flex; align-items: center; justify-content: center; white-space: nowrap;" %>
-                <% end %>
-              </div>
+              <%= link_to '⚙️ Gestão', admin_user_path(user), class: "btn-outline", style: "padding: 0 10px; font-size: 0.75rem; height: 32px; display: flex; align-items: center; font-weight: 700; text-decoration: none; border: 1px solid var(--primary); color: var(--primary); border-radius: 6px;" %>
+              <%= link_to '✏️', edit_admin_user_path(user), class: "btn-outline", style: "padding: 0 10px; font-size: 0.75rem; height: 32px; display: flex; align-items: center; border-radius: 6px; text-decoration: none; border: 1px solid #cbd5e1;" %>
+              
+              <% unless user == current_user %>
+                <%= button_to '🗑️', admin_user_path(user), method: :delete, form: { data: { turbo_confirm: 'Excluir aluno?' }, style: "margin:0;" }, class: "btn-danger", style: "padding: 0 10px; font-size: 0.75rem; height: 32px; min-width: auto; border-radius: 6px;" %>
+              <% end %>
             </div>
           </td>
         </tr>
@@ -89,7 +75,7 @@
   </table>
   
   <% if @users.empty? %>
-    <div style="padding: 3rem; text-align: center; color: var(--text-muted);">
+    <div style="padding: 3rem; text-align: center; color: var(--text-muted); background: white;">
       <p>Nenhum usuário encontrado no sistema.</p>
     </div>
   <% end %>
