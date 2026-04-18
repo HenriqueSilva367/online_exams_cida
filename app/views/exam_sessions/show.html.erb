@@ -122,7 +122,6 @@
                 <input type="radio" 
                        name="exam_session[responses][<%= q.id %>]" 
                        value="<%= ans.id %>"
-                       data-action="change->exam-session-v2#selectOption"
                        <%= "checked" if is_checked %>>
                 <div class="option-text"><%= ans.title %></div>
               </label>
