@@ -5,7 +5,18 @@
       <img src="/logoCida.jpg" alt="Logo CIDA" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--navy-midnight); margin-bottom: 5px;">
       <span style="font-weight: 700; font-size: 0.65rem; color: var(--navy-midnight); text-transform: uppercase; letter-spacing: 0.5px;">Centro de Instrução e Desenvolvimento Aéreo</span>
     </div>
-    <div class="nav-links-sales">
+    
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-open" aria-label="Abrir Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-links-sales" id="nav-links-sales">
+      <!-- Mobile Close Button -->
+      <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Fechar Menu">&times;</button>
+      
       <a href="#quem-somos" class="nav-link-sales">Quem Somos</a>
       <a href="#" class="nav-link-sales">Agende uma Visita</a>
       <a href="#cursos" class="nav-link-sales">Cursos</a>
@@ -15,6 +26,9 @@
         <%= link_to "Área do Aluno", new_user_session_path, class: "btn-area-aluno" %>
       <% end %>
     </div>
+    
+    <!-- Overlay for Mobile Menu -->
+    <div class="nav-overlay" id="nav-overlay"></div>
   </nav>
 
   <!-- Hero Section com Slider de Background -->
@@ -229,6 +243,33 @@
       });
     });
 
+    // Mobile Menu Toggle Logic
+    document.addEventListener("DOMContentLoaded", function() {
+      const openBtn = document.getElementById('mobile-menu-open');
+      const closeBtn = document.getElementById('mobile-menu-close');
+      const navLinks = document.getElementById('nav-links-sales');
+      const overlay = document.getElementById('nav-overlay');
+      const body = document.body;
+
+      function toggleMenu() {
+        navLinks.classList.toggle('active');
+        overlay.classList.toggle('active');
+        body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : 'auto';
+      }
+
+      if (openBtn) openBtn.addEventListener('click', toggleMenu);
+      if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
+      if (overlay) overlay.addEventListener('click', toggleMenu);
+
+      // Fecha ao clicar em um link (âncora)
+      document.querySelectorAll('.nav-link-sales, .btn-area-aluno').forEach(link => {
+        link.addEventListener('click', () => {
+          if (navLinks.classList.contains('active')) {
+            toggleMenu();
+          }
+        });
+      });
+    });
   </script>
 
   <!-- Stage 4: Simulator Section -->
